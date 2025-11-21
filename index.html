@@ -108,6 +108,21 @@
             color: #e74c3c;
         }
         
+        .debt-status {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .soldiers-status {
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .hainan-visits {
+            color: #9b59b6;
+            font-weight: bold;
+        }
+        
         .inventory {
             margin-top: 20px;
         }
@@ -481,6 +496,30 @@
             font-weight: bold;
         }
         
+        .rebellion-option {
+            background-color: #e74c3c !important;
+            color: white !important;
+        }
+        
+        .rebellion-option:hover {
+            background-color: #c0392b !important;
+        }
+        
+        .hainan-warning {
+            background-color: #ffebee;
+            border: 1px solid #ffcdd2;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px;
+            color: #c62828;
+            font-weight: bold;
+        }
+        
+        .divorce-event {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
         @media (max-width: 768px) {
             .game-area {
                 flex-direction: column;
@@ -515,6 +554,10 @@
                     <span class="status-value money" id="money">500 铜钱</span>
                 </div>
                 <div class="status-item">
+                    <span class="status-label">债务：</span>
+                    <span class="status-value debt-status" id="debt">1500 铜钱</span>
+                </div>
+                <div class="status-item">
                     <span class="status-label">所在地：</span>
                     <span class="status-value location" id="location">京城</span>
                 </div>
@@ -529,6 +572,14 @@
                 <div class="status-item">
                     <span class="status-label">健康：</span>
                     <span class="status-value" id="health">80</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">手下：</span>
+                    <span class="status-value soldiers-status" id="soldiers">0 人</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">海南次数：</span>
+                    <span class="status-value hainan-visits" id="hainan-visits">0 次</span>
                 </div>
                 
                 <div class="status-item" id="marriage-status" style="display:none;">
@@ -558,6 +609,7 @@
                     <div class="tab" data-tab="travel">行商</div>
                     <div class="tab" data-tab="extravagance">挥霍</div>
                     <div class="tab" data-tab="marriage">婚姻</div>
+                    <div class="tab" data-tab="rebellion" id="rebellion-tab" style="display:none;">谋反</div>
                 </div>
                 
                 <div class="city-info">
@@ -608,7 +660,7 @@
                         </div>
                         <div class="market-item">
                             <div class="item-name">捐官</div>
-                            <div class="item-price" id="official-price">1500 铜钱</div>
+                            <div class="item-price" id="official-price">3000 铜钱</div>
                             <div class="item-actions">
                                 <button onclick="invest('official')" id="official-btn">投资</button>
                             </div>
@@ -618,6 +670,10 @@
                 
                 <div class="tab-content" id="travel-tab">
                     <h3>行商路线</h3>
+                    <!-- 海南警告 -->
+                    <div id="hainan-warning" class="hainan-warning" style="display:none;">
+                        警告：私盐贸易是重罪！前往海南超过3次会引起官府注意，一旦被发现将面临严厉惩罚！
+                    </div>
                     <div class="market-items">
                         <div class="market-item">
                             <div class="item-name">前往江南</div>
@@ -638,6 +694,13 @@
                             <div class="item-price">耗时: 3回合</div>
                             <div class="item-actions">
                                 <button onclick="travel('lingnan')">出发</button>
+                            </div>
+                        </div>
+                        <div class="market-item">
+                            <div class="item-name">前往海南</div>
+                            <div class="item-price">耗时: 3回合</div>
+                            <div class="item-actions">
+                                <button onclick="travel('hainan')">出发</button>
                             </div>
                         </div>
                         <div class="market-item">
@@ -679,6 +742,15 @@
                                 <button onclick="extravagance('charity')" id="charity-btn">施粥</button>
                             </div>
                         </div>
+                        <!-- 新增招兵买马选项 -->
+                        <div class="extravagance-item">
+                            <div class="extravagance-name">招兵买马</div>
+                            <div class="extravagance-price">花费: 100 铜钱</div>
+                            <div class="extravagance-benefit">效果: 手下 +1, 声望 +1</div>
+                            <div class="item-actions">
+                                <button onclick="extravagance('recruit')" id="recruit-btn">招募</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -716,12 +788,28 @@
                     </div>
                 </div>
                 
+                <!-- 新增谋反选项卡 -->
+                <div class="tab-content" id="rebellion-tab">
+                    <h3>谋反大业</h3>
+                    <p class="warning danger-event">警告：谋反是极其危险的行为，一旦失败将万劫不复！</p>
+                    <div class="market-items">
+                        <div class="market-item">
+                            <div class="item-name">起兵谋反</div>
+                            <div class="item-price">条件: 手下≥100, 声望≥300</div>
+                            <div class="item-actions">
+                                <button onclick="startRebellion()" id="rebellion-btn" class="rebellion-option">起兵</button>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="warning">注意：当你的手下超过100人且声望达到300时，可以尝试谋反。成功则成为天子，失败则满门抄斩！</p>
+                </div>
+                
                 <div class="event-log">
                     <h3>事件记录</h3>
                     <div id="log-container">
                         <div class="log-entry">
                             <span class="log-date">初始:</span>
-                            <span class="log-message">大鹅，你带着500铜钱在京城开始了经商之路。祝你好运！</span>
+                            <span class="log-message">大鹅，你带着500铜钱在京城开始了经商之路。但你欠钱庄1500铜钱，必须在15回合内还清！祝你好运！</span>
                         </div>
                     </div>
                 </div>
@@ -763,36 +851,46 @@
             reputation: 50,
             health: 80,
             location: 'capital',
+            // 新增债务和手下数量
+            debt: 1500,
+            debtDue: 15,
+            soldiers: 0,
+            // 新增海南访问次数
+            hainanVisits: 0,
             inventory: {},
-            // 每个城市的价格基数和可用商品
+            // 每个城市的价格基数和可用商品 - 新增海南和精盐
             basePrices: {
-                capital: { grain: 25, cloth: 55, tea: 90, porcelain: 130, horse: 320, silk: 180, spice: 220, jade: 400 },
-                jiangnan: { grain: 20, cloth: 40, tea: 70, porcelain: 150, horse: 350, silk: 120, spice: 250, jade: 450 },
-                west: { grain: 30, cloth: 60, tea: 120, porcelain: 100, horse: 280, silk: 300, spice: 150, jade: 350 },
-                lingnan: { grain: 22, cloth: 45, tea: 85, porcelain: 140, horse: 330, silk: 200, spice: 180, jade: 500 }
+                capital: { grain: 25, cloth: 55, tea: 90, porcelain: 130, horse: 320, silk: 180, spice: 220, jade: 400, salt: 300 },
+                jiangnan: { grain: 20, cloth: 40, tea: 70, porcelain: 150, horse: 350, silk: 120, spice: 250, jade: 450, salt: 300 },
+                west: { grain: 30, cloth: 60, tea: 120, porcelain: 100, horse: 280, silk: 300, spice: 150, jade: 350, salt: 300 },
+                lingnan: { grain: 22, cloth: 45, tea: 85, porcelain: 140, horse: 330, silk: 200, spice: 180, jade: 500, salt: 300 },
+                hainan: { grain: 35, cloth: 65, tea: 100, porcelain: 160, horse: 400, silk: 250, spice: 200, jade: 600, salt: 30 } // 精盐价格
             },
-            // 每个城市可购买的商品
+            // 每个城市可购买的商品 - 新增海南
             availableItems: {
                 capital: ['grain', 'cloth', 'tea', 'porcelain', 'horse'],
                 jiangnan: ['grain', 'cloth', 'tea', 'silk'],
                 west: ['cloth', 'horse', 'spice', 'jade'],
-                lingnan: ['grain', 'tea', 'porcelain', 'spice', 'jade']
+                lingnan: ['grain', 'tea', 'porcelain', 'spice', 'jade'],
+                hainan: ['salt'] // 海南特产精盐
             },
             // 当前价格（会有波动）
             prices: {},
-            // 每个城市的投资成本
+            // 每个城市的投资成本 - 捐官改为3000
             investmentCosts: {
-                capital: { farm: 500, shop: 700, caravan: 900, official: 2000 },
-                jiangnan: { farm: 400, shop: 600, caravan: 800, official: 1800 },
-                west: { farm: 350, shop: 550, caravan: 750, official: 1500 },
-                lingnan: { farm: 380, shop: 580, caravan: 780, official: 1600 }
+                capital: { farm: 500, shop: 700, caravan: 900, official: 3000 },
+                jiangnan: { farm: 400, shop: 600, caravan: 800, official: 3000 },
+                west: { farm: 350, shop: 550, caravan: 750, official: 3000 },
+                lingnan: { farm: 380, shop: 580, caravan: 780, official: 3000 },
+                hainan: { farm: 300, shop: 500, caravan: 700, official: 2500 }
             },
             // 每个城市的投资状态
             investments: {
                 capital: { farm: 0, shop: 0, caravan: false, official: false },
                 jiangnan: { farm: 0, shop: 0, caravan: false, official: false },
                 west: { farm: 0, shop: 0, caravan: false, official: false },
-                lingnan: { farm: 0, shop: 0, caravan: false, official: false }
+                lingnan: { farm: 0, shop: 0, caravan: false, official: false },
+                hainan: { farm: 0, shop: 0, caravan: false, official: false }
             },
             traveling: false,
             travelDestination: null,
@@ -804,7 +902,7 @@
             purchaseTurns: {},
             // 当前是否有强盗事件需要处理
             pendingRobberEvent: false,
-            // 城市信息
+            // 城市信息 - 新增海南
             cities: {
                 capital: {
                     name: '京城',
@@ -821,13 +919,18 @@
                 lingnan: {
                     name: '岭南',
                     description: '南方重镇，瓷器贸易发达，物价适中。特产：粮食、茶叶、瓷器、香料、玉石。'
+                },
+                hainan: {
+                    name: '海南',
+                    description: '南海明珠，盛产精盐，但私盐贸易风险极大！特产：精盐。'
                 }
             },
-            // 挥霍选项的花费和效果
+            // 挥霍选项的花费和效果 - 新增招兵买马
             extravaganceOptions: {
                 pleasure: { cost: 100, health: 10, reputation: 0, message: "你在怡春园享受了优质服务，身心愉悦，健康恢复了10点。" },
                 temple: { cost: 80, health: 0, reputation: 15, message: "你向寺庙捐赠了香火钱，善举传遍乡里，声望增加了15点。" },
-                charity: { cost: 120, health: 0, reputation: 20, message: "你为穷人施粥，获得了百姓的赞誉，声望增加了20点。" }
+                charity: { cost: 120, health: 0, reputation: 20, message: "你为穷人施粥，获得了百姓的赞誉，声望增加了20点。" },
+                recruit: { cost: 100, soldiers: 1, reputation: 1, message: "你招募了一名手下，你的势力增强了。" }
             },
             // 婚姻选项
             marriageOptions: {
@@ -842,8 +945,8 @@
 
         // 初始化游戏
         function initGame() {
-            // 初始化库存
-            const items = ['grain', 'cloth', 'tea', 'porcelain', 'horse', 'silk', 'spice', 'jade'];
+            // 初始化库存 - 新增精盐
+            const items = ['grain', 'cloth', 'tea', 'porcelain', 'horse', 'silk', 'spice', 'jade', 'salt'];
             items.forEach(item => {
                 gameState.inventory[item] = 0;
                 gameState.purchasePrices[item] = 0;
@@ -868,9 +971,13 @@
             gameState.prices = {};
             
             for (const item in base) {
-                // 价格波动 ±20%
-                const fluctuation = 0.8 + Math.random() * 0.4;
-                gameState.prices[item] = Math.round(base[item] * fluctuation);
+                // 价格波动 ±20%，但精盐价格固定（暴利商品）
+                if (item === 'salt' && gameState.location === 'hainan') {
+                    gameState.prices[item] = base[item]; // 海南精盐价格固定
+                } else {
+                    const fluctuation = 0.8 + Math.random() * 0.4;
+                    gameState.prices[item] = Math.round(base[item] * fluctuation);
+                }
             }
         }
 
@@ -879,6 +986,12 @@
             const basePrice = gameState.prices[item];
             // 声望每增加10点，卖出价格增加2%
             const reputationBonus = 1 + (gameState.reputation / 10) * 0.02;
+            
+            // 精盐是暴利商品，卖出价格固定为300铜钱（除了在海南不能卖出）
+            if (item === 'salt' && gameState.location !== 'hainan') {
+                return 300;
+            }
+            
             return Math.round(basePrice * reputationBonus);
         }
 
@@ -886,6 +999,15 @@
         function updateDisplay() {
             document.getElementById('money').textContent = gameState.money + ' 铜钱';
             document.getElementById('turn').textContent = gameState.turn;
+            
+            // 更新债务显示
+            document.getElementById('debt').textContent = gameState.debt + ' 铜钱';
+            
+            // 更新手下显示
+            document.getElementById('soldiers').textContent = gameState.soldiers + ' 人';
+            
+            // 更新海南访问次数显示
+            document.getElementById('hainan-visits').textContent = gameState.hainanVisits + ' 次';
             
             // 更新声望显示，如果声望低则用红色
             const reputationElem = document.getElementById('reputation');
@@ -945,6 +1067,12 @@
             // 更新婚姻按钮
             updateMarriageButtons();
             
+            // 更新谋反选项卡显示
+            updateRebellionTab();
+            
+            // 更新海南警告
+            updateHainanWarning();
+            
             // 更新日志
             updateLog();
             
@@ -975,6 +1103,7 @@
             
             const availableItems = gameState.availableItems[gameState.location];
             
+            // 在海南，所有商品都可以卖出（除了精盐），但只能买入精盐
             for (const item in gameState.prices) {
                 const isAvailable = availableItems.includes(item);
                 const marketItem = document.createElement('div');
@@ -983,12 +1112,19 @@
                 // 计算卖出价格（考虑声望加成）
                 const sellPrice = getSellPrice(item);
                 
+                // 在海南，精盐只能买入不能卖出
+                const canBuy = isAvailable && !gameState.traveling && gameState.money >= gameState.prices[item];
+                const canSell = gameState.inventory[item] > 0 && 
+                                gameState.purchaseTurns[item] < gameState.turn && 
+                                !gameState.traveling &&
+                                !(item === 'salt' && gameState.location === 'hainan'); // 在海南不能卖出精盐
+                
                 marketItem.innerHTML = `
                     <div class="item-name">${getItemName(item)}</div>
                     <div class="item-price">买入: ${gameState.prices[item]} 铜钱<br>卖出: ${sellPrice} 铜钱</div>
                     <div class="item-actions">
-                        <button onclick="buyItem('${item}')" ${!isAvailable || gameState.money < gameState.prices[item] || gameState.traveling ? 'disabled' : ''}>买入</button>
-                        <button onclick="sellItem('${item}')" ${gameState.inventory[item] <= 0 || gameState.purchaseTurns[item] >= gameState.turn || gameState.traveling ? 'disabled' : ''}>卖出</button>
+                        <button onclick="buyItem('${item}')" ${!canBuy ? 'disabled' : ''}>买入</button>
+                        <button onclick="sellItem('${item}')" ${!canSell ? 'disabled' : ''}>卖出</button>
                     </div>
                 `;
                 
@@ -1154,6 +1290,37 @@
             }
         }
 
+        // 更新谋反选项卡
+        function updateRebellionTab() {
+            const rebellionTab = document.getElementById('rebellion-tab');
+            const rebellionBtn = document.getElementById('rebellion-btn');
+            
+            // 检查是否满足谋反条件
+            if (gameState.soldiers >= 100 && gameState.reputation >= 300) {
+                // 显示谋反选项卡
+                rebellionTab.style.display = 'block';
+                
+                // 启用谋反按钮
+                rebellionBtn.disabled = false;
+            } else {
+                // 隐藏谋反选项卡
+                rebellionTab.style.display = 'none';
+                
+                // 禁用谋反按钮
+                rebellionBtn.disabled = true;
+            }
+        }
+
+        // 更新海南警告
+        function updateHainanWarning() {
+            const hainanWarning = document.getElementById('hainan-warning');
+            if (gameState.hainanVisits >= 2) {
+                hainanWarning.style.display = 'block';
+            } else {
+                hainanWarning.style.display = 'none';
+            }
+        }
+
         // 设置事件监听器
         function setupEventListeners() {
             // 标签页切换
@@ -1206,6 +1373,12 @@
         function sellItem(item) {
             if (gameState.traveling) {
                 addLog("你正在旅途中，无法进行买卖操作。");
+                return;
+            }
+            
+            // 在海南不能卖出精盐
+            if (item === 'salt' && gameState.location === 'hainan') {
+                addLog("在海南不能卖出精盐，私盐贸易是重罪！");
                 return;
             }
             
@@ -1369,6 +1542,11 @@
                     gameState.reputation += option.reputation;
                 }
                 
+                // 新增：招兵买马
+                if (option.soldiers > 0) {
+                    gameState.soldiers += option.soldiers;
+                }
+                
                 addLog(option.message);
                 updateDisplay();
             } else {
@@ -1420,6 +1598,7 @@
                 jiangnan: 2,
                 west: 4,
                 lingnan: 3,
+                hainan: 3, // 新增海南，耗时3回合
                 capital: 1
             };
             
@@ -1439,6 +1618,25 @@
             }
             
             gameState.turn++;
+            
+            // 新增：每回合健康度下降1点
+            gameState.health -= 1;
+            
+            // 新增：每日日常损耗
+            const dailyCost = 20 + (gameState.soldiers * 5); // 基础20铜钱 + 每个手下5铜钱
+            gameState.money -= dailyCost;
+            
+            if (dailyCost > 20) {
+                addLog(`日常开销：基础生活费20铜钱 + ${gameState.soldiers}名手下军饷${gameState.soldiers * 5}铜钱 = ${dailyCost}铜钱。`);
+            } else {
+                addLog(`日常开销：基础生活费20铜钱。`);
+            }
+            
+            // 新增：健康自然下降
+            addLog(`<span class="warning">时光流逝，你的健康度下降了1点。</span>`);
+            
+            // 新增：检查离婚条件
+            checkDivorce();
             
             let eventOccurred = false;
             
@@ -1559,6 +1757,12 @@
             const destination = gameState.travelDestination;
             gameState.location = destination;
             
+            // 如果是去海南，增加访问次数
+            if (destination === 'hainan') {
+                gameState.hainanVisits++;
+                addLog(`<span class="danger-event">警告：这是你第${gameState.hainanVisits}次前往海南进行私盐贸易！</span>`);
+            }
+            
             // 行商成功增加声望
             const reputationGain = Math.floor(Math.random() * 6) + 5; // 5-10 声望
             gameState.reputation += reputationGain;
@@ -1570,6 +1774,20 @@
             
             // 更新到达城市的价格
             updatePrices();
+        }
+
+        // 检查离婚条件
+        function checkDivorce() {
+            if (gameState.married && gameState.reputation < 40) {
+                addLog(`<span class="divorce-event">由于你的声望太低，你的${gameState.marriageType === 'commoner' ? '普通百姓' : gameState.marriageType === 'scholar' ? '文人墨客' : '皇家国戚'}配偶决定与你离婚！你失去了1000铜钱和10点声望。</span>`);
+                
+                gameState.married = false;
+                gameState.marriageType = null;
+                gameState.money -= 1000;
+                gameState.reputation -= 10;
+                
+                updateDisplay();
+            }
         }
 
         // 随机事件
@@ -1795,6 +2013,18 @@
                 return;
             }
             
+            // 债务到期
+            if (gameState.turn > gameState.debtDue) {
+                showEnding("债务违约", "你未能在规定期限内偿还钱庄的债务，钱庄派人查封了你的所有资产。大鹅，你的经商之路就此终结。");
+                return;
+            }
+            
+            // 海南访问次数超过3次
+            if (gameState.hainanVisits > 3) {
+                showEnding("私盐贩子", "你多次前往海南进行私盐贸易，引起了官府的注意。官府派人将你抓捕，你的所有财产被没收，最终在狱中度过余生。");
+                return;
+            }
+            
             // 回合限制 - 修改为50回合
             if (gameState.turn >= 50) {
                 if (gameState.money >= 5000) {
@@ -1845,6 +2075,10 @@
             gameState.reputation = 50;
             gameState.health = 80;
             gameState.location = 'capital';
+            gameState.debt = 1500;
+            gameState.debtDue = 15;
+            gameState.soldiers = 0;
+            gameState.hainanVisits = 0;
             
             for (const item in gameState.inventory) {
                 gameState.inventory[item] = 0;
@@ -1870,7 +2104,7 @@
             gameState.marriageType = null;
             
             gameState.log = [
-                { turn: "初始", message: "大鹅，你带着500铜钱在京城开始了经商之路。祝你好运！" }
+                { turn: "初始", message: "大鹅，你带着500铜钱在京城开始了经商之路。但你欠钱庄1500铜钱，必须在15回合内还清！祝你好运！" }
             ];
             
             // 更新价格
@@ -1912,10 +2146,21 @@
                 horse: "马匹",
                 silk: "丝绸",
                 spice: "香料",
-                jade: "玉石"
+                jade: "玉石",
+                salt: "精盐"
             };
             
             return names[item] || item;
+        }
+
+        // 谋反功能
+        function startRebellion() {
+            if (gameState.soldiers >= 100 && gameState.reputation >= 300) {
+                // 谋反成功
+                showEnding("我为天子！", "你率领手下大军攻入皇宫，推翻了腐朽的朝廷，登基为帝！大鹅，你从一介商贾成为了九五之尊，开创了新的王朝！");
+            } else {
+                addLog("谋反条件不足，需要至少100名手下和300点声望。");
+            }
         }
 
         // 初始化游戏
