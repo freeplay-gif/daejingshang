@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大鹅经商记 - 古代多城市模拟经营游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f1e6;
+            color: #333;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><path d="M0 0 L100 0 L100 100 Z" fill="%23876"/><path d="M0 0 L0 100 L100 100 Z" fill="%23a98"/></svg>');
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid #d9c7a7;
+        }
+        
+        header {
+            background: linear-gradient(to right, #8b4513, #a0522d);
+            color: #f5deb3;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #654321;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            font-style: italic;
+        }
+        
+        .game-area {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            gap: 20px;
+        }
+        
+        .status-panel {
+            flex: 1;
+            min-width: 300px;
+            background: #f9f3e9;
+            border: 2px solid #d9c7a7;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .action-panel {
+            flex: 2;
+            min-width: 300px;
+            background: #f9f3e9;
+            border: 2px solid #d9c7a7;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #d9c7a7;
+        }
+        
+        .status-label {
+            font-weight: bold;
+            color: #8b4513;
+        }
+        
+        .status-value {
+            font-weight: bold;
+        }
+        
+        .money {
+            color: #c90;
+        }
+        
+        .location {
+            color: #5a7d9a;
+        }
+        
+        .health-low {
+            color: #e74c3c;
+        }
+        
+        .reputation-low {
+            color: #e74c3c;
+        }
+        
+        .inventory {
+            margin-top: 20px;
+        }
+        
+        .inventory h3 {
+            color: #8b4513;
+            border-bottom: 2px solid #d9c7a7;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .inventory-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .new-item {
+            color: #e67e22;
+            font-weight: bold;
+        }
+        
+        .action-tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #d9c7a7;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #e8dfca;
+            border: 1px solid #d9c7a7;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background: #d9c7a7;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 15px;
+            background: #f9f3e9;
+            border: 1px solid #d9c7a7;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .market-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .market-item {
+            background: #f5f1e6;
+            border: 1px solid #d9c7a7;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .market-item.unavailable {
+            opacity: 0.6;
+            background-color: #e8e8e8;
+        }
+        
+        .item-name {
+            font-weight: bold;
+            color: #8b4513;
+            margin-bottom: 5px;
+        }
+        
+        .item-price {
+            color: #c90;
+            margin-bottom: 10px;
+        }
+        
+        .item-actions {
+            display: flex;
+            justify-content: space-around;
+        }
+        
+        button {
+            background: #8b4513;
+            color: #f5deb3;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background: #a0522d;
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .city-info {
+            background: #f5f1e6;
+            border: 1px solid #d9c7a7;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .city-name {
+            font-size: 1.5rem;
+            color: #8b4513;
+            margin-bottom: 5px;
+        }
+        
+        .city-description {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .event-log {
+            margin-top: 20px;
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #d9c7a7;
+            border-radius: 5px;
+            padding: 10px;
+            background: #f5f1e6;
+        }
+        
+        .log-entry {
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #d9c7a7;
+        }
+        
+        .log-date {
+            font-weight: bold;
+            color: #8b4513;
+        }
+        
+        .log-message {
+            margin-left: 10px;
+        }
+        
+        .next-turn {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        #nextTurnBtn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            background: #654321;
+        }
+        
+        .game-over {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .ending-card {
+            background: #f5f1e6;
+            border: 3px solid #d9c7a7;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .ending-title {
+            color: #8b4513;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        
+        .ending-description {
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .investments {
+            margin-top: 20px;
+        }
+        
+        .investments h3 {
+            color: #8b4513;
+            border-bottom: 2px solid #d9c7a7;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .investment-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        
+        .investment-item.owned {
+            background-color: #e8f5e9;
+        }
+        
+        .profit-indicator {
+            color: #4caf50;
+            font-weight: bold;
+        }
+        
+        .loss-indicator {
+            color: #f44336;
+            font-weight: bold;
+        }
+        
+        .reputation-bonus {
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .danger-event {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .warning {
+            color: #e67e22;
+            font-weight: bold;
+        }
+        
+        .choice-container {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0e6d2;
+            border-radius: 5px;
+            border: 1px solid #d9c7a7;
+        }
+        
+        .choice-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #8b4513;
+        }
+        
+        .choice-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .choice-btn {
+            background: #a0522d;
+            color: #f5deb3;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .choice-btn:hover {
+            background: #8b4513;
+        }
+        
+        .extravagance-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .extravagance-item {
+            background: #f5f1e6;
+            border: 1px solid #d9c7a7;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .extravagance-name {
+            font-weight: bold;
+            color: #8b4513;
+            margin-bottom: 5px;
+        }
+        
+        .extravagance-price {
+            color: #c90;
+            margin-bottom: 10px;
+        }
+        
+        .extravagance-benefit {
+            color: #4caf50;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .marriage-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .marriage-item {
+            background: #f5f1e6;
+            border: 1px solid #d9c7a7;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .marriage-name {
+            font-weight: bold;
+            color: #8b4513;
+            margin-bottom: 5px;
+        }
+        
+        .marriage-dowry {
+            color: #c90;
+            margin-bottom: 5px;
+        }
+        
+        .marriage-requirement {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .marriage-benefit {
+            color: #4caf50;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .nothing-happened {
+            color: #999;
+            font-style: italic;
+        }
+        
+        .travel-warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px;
+            color: #856404;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .game-area {
+                flex-direction: column;
+            }
+            
+            .market-items {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .choice-buttons {
+                flex-direction: column;
+            }
+            
+            .extravagance-options, .marriage-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>大鹅经商记</h1>
+            <div class="subtitle">古代多城市模拟经营游戏 - 从京城开始你的商业传奇</div>
+        </header>
+        
+        <div class="game-area">
+            <div class="status-panel">
+                <h2>大鹅状态</h2>
+                <div class="status-item">
+                    <span class="status-label">资金：</span>
+                    <span class="status-value money" id="money">500 铜钱</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">所在地：</span>
+                    <span class="status-value location" id="location">京城</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">回合：</span>
+                    <span class="status-value" id="turn">1</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">声望：</span>
+                    <span class="status-value" id="reputation">50</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">健康：</span>
+                    <span class="status-value" id="health">80</span>
+                </div>
+                
+                <div class="status-item" id="marriage-status" style="display:none;">
+                    <span class="status-label">婚姻：</span>
+                    <span class="status-value" id="marriage-type"></span>
+                </div>
+                
+                <div class="inventory">
+                    <h3>库存</h3>
+                    <div id="inventory-list">
+                        <!-- 库存将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+                
+                <div class="investments">
+                    <h3>产业投资</h3>
+                    <div id="investments-list">
+                        <!-- 投资列表将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-panel">
+                <div class="action-tabs">
+                    <div class="tab active" data-tab="market">市场买卖</div>
+                    <div class="tab" data-tab="invest">投资</div>
+                    <div class="tab" data-tab="travel">行商</div>
+                    <div class="tab" data-tab="extravagance">挥霍</div>
+                    <div class="tab" data-tab="marriage">婚姻</div>
+                </div>
+                
+                <div class="city-info">
+                    <div class="city-name" id="current-city-name">京城</div>
+                    <div class="city-description" id="current-city-description">天子脚下，商贾云集，物价偏高但市场稳定。特产：粮食、布匹、茶叶、瓷器、马匹。</div>
+                </div>
+                
+                <!-- 旅行警告 -->
+                <div id="travel-warning" class="travel-warning" style="display:none;">
+                    你正在旅途中，无法进行市场买卖、投资、挥霍和婚姻操作。
+                </div>
+                
+                <div class="tab-content active" id="market-tab">
+                    <h3>当前市场行情</h3>
+                    <div class="market-items" id="market-items-container">
+                        <!-- 商品将通过JavaScript动态生成 -->
+                    </div>
+                    <p class="warning">注意：本回合购买的商品需要等到下一回合才能卖出。</p>
+                </div>
+                
+                <div class="tab-content" id="invest-tab">
+                    <h3>本地投资机会</h3>
+                    <div class="market-items">
+                        <div class="market-item">
+                            <div class="item-name">购买田地</div>
+                            <div class="item-price" id="farm-price">400 铜钱</div>
+                            <div class="item-actions">
+                                <button onclick="buyInvestment('farm')" id="farm-buy-btn">买入</button>
+                                <button onclick="sellInvestment('farm')" id="farm-sell-btn">卖出</button>
+                            </div>
+                            <div>当前拥有: <span id="farm-count">0</span></div>
+                        </div>
+                        <div class="market-item">
+                            <div class="item-name">开设商铺</div>
+                            <div class="item-price" id="shop-price">600 铜钱</div>
+                            <div class="item-actions">
+                                <button onclick="buyInvestment('shop')" id="shop-buy-btn">买入</button>
+                                <button onclick="sellInvestment('shop')" id="shop-sell-btn">卖出</button>
+                            </div>
+                            <div>当前拥有: <span id="shop-count">0</span></div>
+                        </div>
+                        <div class="market-item">
+                            <div class="item-name">入股商队</div>
+                            <div class="item-price" id="caravan-price">800 铜钱</div>
+                            <div class="item-actions">
+                                <button onclick="invest('caravan')" id="caravan-btn">投资</button>
+                            </div>
+                        </div>
+                        <div class="market-item">
+                            <div class="item-name">捐官</div>
+                            <div class="item-price" id="official-price">1500 铜钱</div>
+                            <div class="item-actions">
+                                <button onclick="invest('official')" id="official-btn">投资</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="travel-tab">
+                    <h3>行商路线</h3>
+                    <div class="market-items">
+                        <div class="market-item">
+                            <div class="item-name">前往江南</div>
+                            <div class="item-price">耗时: 2回合</div>
+                            <div class="item-actions">
+                                <button onclick="travel('jiangnan')">出发</button>
+                            </div>
+                        </div>
+                        <div class="market-item">
+                            <div class="item-name">前往西域</div>
+                            <div class="item-price">耗时: 4回合</div>
+                            <div class="item-actions">
+                                <button onclick="travel('west')">出发</button>
+                            </div>
+                        </div>
+                        <div class="market-item">
+                            <div class="item-name">前往岭南</div>
+                            <div class="item-price">耗时: 3回合</div>
+                            <div class="item-actions">
+                                <button onclick="travel('lingnan')">出发</button>
+                            </div>
+                        </div>
+                        <div class="market-item">
+                            <div class="item-name">返回京城</div>
+                            <div class="item-price">耗时: 1回合</div>
+                            <div class="item-actions">
+                                <button onclick="travel('capital')" id="return-btn" style="display:none;">返回</button>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="warning">注意：行商途中可能遭遇强盗，导致货物损失甚至死亡！</p>
+                </div>
+                
+                <div class="tab-content" id="extravagance-tab">
+                    <h3>挥霍享受</h3>
+                    <p class="warning">注意：这些行为会消耗你的金钱，但可以提升健康或声望。</p>
+                    <div class="extravagance-options">
+                        <div class="extravagance-item">
+                            <div class="extravagance-name">怡春园</div>
+                            <div class="extravagance-price">花费: 100 铜钱</div>
+                            <div class="extravagance-benefit">效果: 健康 +10</div>
+                            <div class="item-actions">
+                                <button onclick="extravagance('pleasure')" id="pleasure-btn">享受服务</button>
+                            </div>
+                        </div>
+                        <div class="extravagance-item">
+                            <div class="extravagance-name">捐香火钱</div>
+                            <div class="extravagance-price">花费: 80 铜钱</div>
+                            <div class="extravagance-benefit">效果: 声望 +15</div>
+                            <div class="item-actions">
+                                <button onclick="extravagance('temple')" id="temple-btn">捐赠</button>
+                            </div>
+                        </div>
+                        <div class="extravagance-item">
+                            <div class="extravagance-name">施粥济贫</div>
+                            <div class="extravagance-price">花费: 120 铜钱</div>
+                            <div class="extravagance-benefit">效果: 声望 +20</div>
+                            <div class="item-actions">
+                                <button onclick="extravagance('charity')" id="charity-btn">施粥</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="marriage-tab">
+                    <h3>婚姻大事</h3>
+                    <p class="warning">注意：婚姻是人生大事，只能选择一次！选择后无法更改。</p>
+                    <div class="marriage-options">
+                        <div class="marriage-item">
+                            <div class="marriage-name">普通百姓</div>
+                            <div class="marriage-dowry">嫁妆: 200 铜钱</div>
+                            <div class="marriage-requirement">要求: 无</div>
+                            <div class="marriage-benefit">效果: 声望 +10</div>
+                            <div class="item-actions">
+                                <button onclick="marry('commoner')" id="commoner-btn">结婚</button>
+                            </div>
+                        </div>
+                        <div class="marriage-item">
+                            <div class="marriage-name">文人墨客</div>
+                            <div class="marriage-dowry">嫁妆: 500 铜钱</div>
+                            <div class="marriage-requirement">要求: 声望 ≥ 100</div>
+                            <div class="marriage-benefit">效果: 声望 +30</div>
+                            <div class="item-actions">
+                                <button onclick="marry('scholar')" id="scholar-btn">结婚</button>
+                            </div>
+                        </div>
+                        <div class="marriage-item">
+                            <div class="marriage-name">皇家国戚</div>
+                            <div class="marriage-dowry">嫁妆: 1000 铜钱</div>
+                            <div class="marriage-requirement">要求: 声望 ≥ 150</div>
+                            <div class="marriage-benefit">效果: 声望 +50</div>
+                            <div class="item-actions">
+                                <button onclick="marry('royal')" id="royal-btn">结婚</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="event-log">
+                    <h3>事件记录</h3>
+                    <div id="log-container">
+                        <div class="log-entry">
+                            <span class="log-date">初始:</span>
+                            <span class="log-message">大鹅，你带着500铜钱在京城开始了经商之路。祝你好运！</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="next-turn">
+                    <button id="nextTurnBtn">进入下一回合</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="game-over" id="gameOver">
+        <div class="ending-card">
+            <h2 class="ending-title" id="endingTitle">游戏结束</h2>
+            <p class="ending-description" id="endingDescription"></p>
+            <button onclick="restartGame()">重新开始</button>
+        </div>
+    </div>
+
+    <!-- 强盗事件选择模态框 -->
+    <div id="robberModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:200; justify-content:center; align-items:center;">
+        <div style="background:#f5f1e6; padding:20px; border-radius:10px; max-width:500px; width:90%; border:2px solid #8b4513;">
+            <h3 style="color:#8b4513; margin-bottom:15px;">遭遇强盗！</h3>
+            <p style="margin-bottom:15px;">你在一处险要的山路上遭遇了一伙强盗，他们手持兵器挡住了去路。</p>
+            <div class="choice-container">
+                <div class="choice-title">请选择应对方式：</div>
+                <div class="choice-buttons" id="robberChoices">
+                    <!-- 选择按钮将通过JavaScript动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 游戏状态
+        const gameState = {
+            money: 500,
+            turn: 1,
+            reputation: 50,
+            health: 80,
+            location: 'capital',
+            inventory: {},
+            // 每个城市的价格基数和可用商品
+            basePrices: {
+                capital: { grain: 25, cloth: 55, tea: 90, porcelain: 130, horse: 320, silk: 180, spice: 220, jade: 400 },
+                jiangnan: { grain: 20, cloth: 40, tea: 70, porcelain: 150, horse: 350, silk: 120, spice: 250, jade: 450 },
+                west: { grain: 30, cloth: 60, tea: 120, porcelain: 100, horse: 280, silk: 300, spice: 150, jade: 350 },
+                lingnan: { grain: 22, cloth: 45, tea: 85, porcelain: 140, horse: 330, silk: 200, spice: 180, jade: 500 }
+            },
+            // 每个城市可购买的商品
+            availableItems: {
+                capital: ['grain', 'cloth', 'tea', 'porcelain', 'horse'],
+                jiangnan: ['grain', 'cloth', 'tea', 'silk'],
+                west: ['cloth', 'horse', 'spice', 'jade'],
+                lingnan: ['grain', 'tea', 'porcelain', 'spice', 'jade']
+            },
+            // 当前价格（会有波动）
+            prices: {},
+            // 每个城市的投资成本
+            investmentCosts: {
+                capital: { farm: 500, shop: 700, caravan: 900, official: 2000 },
+                jiangnan: { farm: 400, shop: 600, caravan: 800, official: 1800 },
+                west: { farm: 350, shop: 550, caravan: 750, official: 1500 },
+                lingnan: { farm: 380, shop: 580, caravan: 780, official: 1600 }
+            },
+            // 每个城市的投资状态
+            investments: {
+                capital: { farm: 0, shop: 0, caravan: false, official: false },
+                jiangnan: { farm: 0, shop: 0, caravan: false, official: false },
+                west: { farm: 0, shop: 0, caravan: false, official: false },
+                lingnan: { farm: 0, shop: 0, caravan: false, official: false }
+            },
+            traveling: false,
+            travelDestination: null,
+            travelRemaining: 0,
+            log: [],
+            // 记录购买价格，用于计算利润
+            purchasePrices: {},
+            // 记录商品购买回合，用于限制卖出
+            purchaseTurns: {},
+            // 当前是否有强盗事件需要处理
+            pendingRobberEvent: false,
+            // 城市信息
+            cities: {
+                capital: {
+                    name: '京城',
+                    description: '天子脚下，商贾云集，物价偏高但市场稳定。特产：粮食、布匹、茶叶、瓷器、马匹。'
+                },
+                jiangnan: {
+                    name: '江南',
+                    description: '鱼米之乡，盛产粮食和布匹，物价相对较低。特产：粮食、布匹、茶叶、丝绸。'
+                },
+                west: {
+                    name: '西域',
+                    description: '丝绸之路要道，茶叶和马匹价格有优势。特产：布匹、马匹、香料、玉石。'
+                },
+                lingnan: {
+                    name: '岭南',
+                    description: '南方重镇，瓷器贸易发达，物价适中。特产：粮食、茶叶、瓷器、香料、玉石。'
+                }
+            },
+            // 挥霍选项的花费和效果
+            extravaganceOptions: {
+                pleasure: { cost: 100, health: 10, reputation: 0, message: "你在怡春园享受了优质服务，身心愉悦，健康恢复了10点。" },
+                temple: { cost: 80, health: 0, reputation: 15, message: "你向寺庙捐赠了香火钱，善举传遍乡里，声望增加了15点。" },
+                charity: { cost: 120, health: 0, reputation: 20, message: "你为穷人施粥，获得了百姓的赞誉，声望增加了20点。" }
+            },
+            // 婚姻选项
+            marriageOptions: {
+                commoner: { dowry: 200, reputationGain: 10, requirement: 0, message: "你与一位普通百姓结婚，虽然朴素但幸福。" },
+                scholar: { dowry: 500, reputationGain: 30, requirement: 100, message: "你与一位文人墨客结婚，文化修养提升了。" },
+                royal: { dowry: 1000, reputationGain: 50, requirement: 150, message: "你与一位皇家国戚结婚，地位显赫，人人羡慕。" }
+            },
+            // 婚姻状态
+            married: false,
+            marriageType: null
+        };
+
+        // 初始化游戏
+        function initGame() {
+            // 初始化库存
+            const items = ['grain', 'cloth', 'tea', 'porcelain', 'horse', 'silk', 'spice', 'jade'];
+            items.forEach(item => {
+                gameState.inventory[item] = 0;
+                gameState.purchasePrices[item] = 0;
+                gameState.purchaseTurns[item] = 0;
+            });
+            
+            // 初始化价格
+            updatePrices();
+            updateDisplay();
+            setupEventListeners();
+            updateInvestmentButtons();
+            updateInvestmentsList();
+            updateMarketItems();
+            updateInventoryList();
+            updateExtravaganceButtons();
+            updateMarriageButtons();
+        }
+
+        // 更新价格（考虑波动）
+        function updatePrices() {
+            const base = gameState.basePrices[gameState.location];
+            gameState.prices = {};
+            
+            for (const item in base) {
+                // 价格波动 ±20%
+                const fluctuation = 0.8 + Math.random() * 0.4;
+                gameState.prices[item] = Math.round(base[item] * fluctuation);
+            }
+        }
+
+        // 计算卖出价格（考虑声望加成）
+        function getSellPrice(item) {
+            const basePrice = gameState.prices[item];
+            // 声望每增加10点，卖出价格增加2%
+            const reputationBonus = 1 + (gameState.reputation / 10) * 0.02;
+            return Math.round(basePrice * reputationBonus);
+        }
+
+        // 更新显示
+        function updateDisplay() {
+            document.getElementById('money').textContent = gameState.money + ' 铜钱';
+            document.getElementById('turn').textContent = gameState.turn;
+            
+            // 更新声望显示，如果声望低则用红色
+            const reputationElem = document.getElementById('reputation');
+            reputationElem.textContent = gameState.reputation;
+            if (gameState.reputation <= 20) {
+                reputationElem.className = 'status-value reputation-low';
+            } else {
+                reputationElem.className = 'status-value';
+            }
+            
+            // 更新健康显示，如果健康低则用红色
+            const healthElem = document.getElementById('health');
+            healthElem.textContent = gameState.health;
+            if (gameState.health <= 20) {
+                healthElem.className = 'status-value health-low';
+            } else {
+                healthElem.className = 'status-value';
+            }
+            
+            document.getElementById('location').textContent = gameState.cities[gameState.location].name;
+            
+            // 更新婚姻状态显示
+            const marriageStatusElem = document.getElementById('marriage-status');
+            const marriageTypeElem = document.getElementById('marriage-type');
+            if (gameState.married) {
+                marriageStatusElem.style.display = 'flex';
+                let marriageName = '';
+                switch(gameState.marriageType) {
+                    case 'commoner': marriageName = '普通百姓'; break;
+                    case 'scholar': marriageName = '文人墨客'; break;
+                    case 'royal': marriageName = '皇家国戚'; break;
+                }
+                marriageTypeElem.textContent = marriageName;
+            } else {
+                marriageStatusElem.style.display = 'none';
+            }
+            
+            // 更新城市信息
+            document.getElementById('current-city-name').textContent = gameState.cities[gameState.location].name;
+            document.getElementById('current-city-description').textContent = gameState.cities[gameState.location].description;
+            
+            // 更新市场商品
+            updateMarketItems();
+            
+            // 更新投资按钮
+            updateInvestmentButtons();
+            
+            // 更新投资列表
+            updateInvestmentsList();
+            
+            // 更新库存列表
+            updateInventoryList();
+            
+            // 更新挥霍按钮
+            updateExtravaganceButtons();
+            
+            // 更新婚姻按钮
+            updateMarriageButtons();
+            
+            // 更新日志
+            updateLog();
+            
+            // 显示/隐藏返回按钮
+            const returnBtn = document.getElementById('return-btn');
+            if (gameState.location !== 'capital') {
+                returnBtn.style.display = 'block';
+            } else {
+                returnBtn.style.display = 'none';
+            }
+            
+            // 如果有待处理的强盗事件，禁用下一回合按钮
+            document.getElementById('nextTurnBtn').disabled = gameState.pendingRobberEvent;
+            
+            // 显示/隐藏旅行警告
+            const travelWarning = document.getElementById('travel-warning');
+            if (gameState.traveling) {
+                travelWarning.style.display = 'block';
+            } else {
+                travelWarning.style.display = 'none';
+            }
+        }
+
+        // 更新市场商品显示
+        function updateMarketItems() {
+            const container = document.getElementById('market-items-container');
+            container.innerHTML = '';
+            
+            const availableItems = gameState.availableItems[gameState.location];
+            
+            for (const item in gameState.prices) {
+                const isAvailable = availableItems.includes(item);
+                const marketItem = document.createElement('div');
+                marketItem.className = `market-item ${isAvailable ? '' : 'unavailable'}`;
+                
+                // 计算卖出价格（考虑声望加成）
+                const sellPrice = getSellPrice(item);
+                
+                marketItem.innerHTML = `
+                    <div class="item-name">${getItemName(item)}</div>
+                    <div class="item-price">买入: ${gameState.prices[item]} 铜钱<br>卖出: ${sellPrice} 铜钱</div>
+                    <div class="item-actions">
+                        <button onclick="buyItem('${item}')" ${!isAvailable || gameState.money < gameState.prices[item] || gameState.traveling ? 'disabled' : ''}>买入</button>
+                        <button onclick="sellItem('${item}')" ${gameState.inventory[item] <= 0 || gameState.purchaseTurns[item] >= gameState.turn || gameState.traveling ? 'disabled' : ''}>卖出</button>
+                    </div>
+                `;
+                
+                container.appendChild(marketItem);
+            }
+        }
+
+        // 更新库存列表
+        function updateInventoryList() {
+            const container = document.getElementById('inventory-list');
+            container.innerHTML = '';
+            
+            for (const item in gameState.inventory) {
+                if (gameState.inventory[item] > 0) {
+                    const inventoryItem = document.createElement('div');
+                    inventoryItem.className = 'inventory-item';
+                    
+                    const itemName = document.createElement('span');
+                    itemName.textContent = `${getItemName(item)}：`;
+                    
+                    const itemCount = document.createElement('span');
+                    itemCount.textContent = gameState.inventory[item];
+                    
+                    // 如果商品是本回合购买的，添加特殊标记
+                    if (gameState.purchaseTurns[item] >= gameState.turn) {
+                        itemCount.className = 'new-item';
+                        itemCount.textContent += ' (新)';
+                    }
+                    
+                    inventoryItem.appendChild(itemName);
+                    inventoryItem.appendChild(itemCount);
+                    container.appendChild(inventoryItem);
+                }
+            }
+        }
+
+        // 更新投资按钮状态
+        function updateInvestmentButtons() {
+            const location = gameState.location;
+            const costs = gameState.investmentCosts[location];
+            const investments = gameState.investments[location];
+            
+            // 更新田地
+            const farmBuyBtn = document.getElementById('farm-buy-btn');
+            const farmSellBtn = document.getElementById('farm-sell-btn');
+            const farmPriceElem = document.getElementById('farm-price');
+            const farmCountElem = document.getElementById('farm-count');
+            
+            farmPriceElem.textContent = costs.farm + ' 铜钱';
+            farmCountElem.textContent = investments.farm;
+            
+            farmBuyBtn.disabled = gameState.money < costs.farm || gameState.traveling;
+            farmSellBtn.disabled = investments.farm <= 0 || gameState.traveling;
+            
+            // 更新商铺
+            const shopBuyBtn = document.getElementById('shop-buy-btn');
+            const shopSellBtn = document.getElementById('shop-sell-btn');
+            const shopPriceElem = document.getElementById('shop-price');
+            const shopCountElem = document.getElementById('shop-count');
+            
+            shopPriceElem.textContent = costs.shop + ' 铜钱';
+            shopCountElem.textContent = investments.shop;
+            
+            shopBuyBtn.disabled = gameState.money < costs.shop || gameState.traveling;
+            shopSellBtn.disabled = investments.shop <= 0 || gameState.traveling;
+            
+            // 更新商队和官职
+            for (const type of ['caravan', 'official']) {
+                const btn = document.getElementById(type + '-btn');
+                const priceElem = document.getElementById(type + '-price');
+                
+                if (investments[type]) {
+                    btn.textContent = '已投资';
+                    btn.disabled = true;
+                    priceElem.textContent = '已拥有';
+                } else {
+                    btn.textContent = '投资';
+                    btn.disabled = gameState.money < costs[type] || gameState.traveling;
+                    priceElem.textContent = costs[type] + ' 铜钱';
+                }
+            }
+        }
+
+        // 更新挥霍按钮状态
+        function updateExtravaganceButtons() {
+            const options = gameState.extravaganceOptions;
+            
+            for (const type in options) {
+                const btn = document.getElementById(type + '-btn');
+                const option = options[type];
+                
+                if (gameState.money < option.cost || gameState.traveling) {
+                    btn.disabled = true;
+                } else {
+                    btn.disabled = false;
+                }
+            }
+        }
+
+        // 更新婚姻按钮状态
+        function updateMarriageButtons() {
+            if (gameState.married || gameState.traveling) {
+                // 如果已经结婚或正在旅行，禁用所有婚姻按钮
+                document.getElementById('commoner-btn').disabled = true;
+                document.getElementById('scholar-btn').disabled = true;
+                document.getElementById('royal-btn').disabled = true;
+                return;
+            }
+            
+            // 检查每个婚姻选项的条件
+            for (const type in gameState.marriageOptions) {
+                const btn = document.getElementById(type + '-btn');
+                const option = gameState.marriageOptions[type];
+                
+                if (gameState.reputation < option.requirement) {
+                    btn.disabled = true;
+                } else {
+                    btn.disabled = false;
+                }
+            }
+        }
+
+        // 更新投资列表
+        function updateInvestmentsList() {
+            const container = document.getElementById('investments-list');
+            container.innerHTML = '';
+            
+            for (const city in gameState.investments) {
+                for (const type in gameState.investments[city]) {
+                    if (type === 'farm' || type === 'shop') {
+                        // 田地或商铺
+                        const count = gameState.investments[city][type];
+                        if (count > 0) {
+                            const investmentItem = document.createElement('div');
+                            investmentItem.className = 'investment-item owned';
+                            
+                            let investmentName = '';
+                            switch(type) {
+                                case 'farm': investmentName = '田地'; break;
+                                case 'shop': investmentName = '商铺'; break;
+                            }
+                            
+                            investmentItem.innerHTML = `<span>${gameState.cities[city].name} - ${investmentName} x${count}</span>`;
+                            container.appendChild(investmentItem);
+                        }
+                    } else {
+                        // 商队或官职
+                        if (gameState.investments[city][type]) {
+                            const investmentItem = document.createElement('div');
+                            investmentItem.className = 'investment-item owned';
+                            
+                            let investmentName = '';
+                            switch(type) {
+                                case 'caravan': investmentName = '商队'; break;
+                                case 'official': investmentName = '官职'; break;
+                            }
+                            
+                            investmentItem.innerHTML = `<span>${gameState.cities[city].name} - ${investmentName}</span>`;
+                            container.appendChild(investmentItem);
+                        }
+                    }
+                }
+            }
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 标签页切换
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    document.getElementById(this.dataset.tab + '-tab').classList.add('active');
+                });
+            });
+            
+            // 下一回合按钮
+            document.getElementById('nextTurnBtn').addEventListener('click', nextTurn);
+        }
+
+        // 买入商品
+        function buyItem(item) {
+            if (gameState.traveling) {
+                addLog("你正在旅途中，无法进行买卖操作。");
+                return;
+            }
+            
+            const price = gameState.prices[item];
+            if (gameState.money >= price) {
+                gameState.money -= price;
+                gameState.inventory[item]++;
+                
+                // 记录购买价格和购买回合
+                if (gameState.purchasePrices[item] === 0) {
+                    gameState.purchasePrices[item] = price;
+                } else {
+                    // 计算加权平均购买价格
+                    const totalCost = gameState.purchasePrices[item] * (gameState.inventory[item] - 1) + price;
+                    gameState.purchasePrices[item] = Math.round(totalCost / gameState.inventory[item]);
+                }
+                
+                // 记录购买回合
+                gameState.purchaseTurns[item] = gameState.turn;
+                
+                addLog(`你在${gameState.cities[gameState.location].name}以 ${price} 铜钱的价格购买了1单位${getItemName(item)}。`);
+                updateDisplay();
+            } else {
+                addLog(`资金不足，无法在${gameState.cities[gameState.location].name}购买${getItemName(item)}。`);
+            }
+        }
+
+        // 卖出商品
+        function sellItem(item) {
+            if (gameState.traveling) {
+                addLog("你正在旅途中，无法进行买卖操作。");
+                return;
+            }
+            
+            if (gameState.inventory[item] > 0) {
+                // 检查是否本回合购买的商品
+                if (gameState.purchaseTurns[item] >= gameState.turn) {
+                    addLog(`你不能卖出本回合购买的${getItemName(item)}，请等待下一回合。`);
+                    return;
+                }
+                
+                const sellPrice = getSellPrice(item);
+                const purchasePrice = gameState.purchasePrices[item];
+                const profit = sellPrice - purchasePrice;
+                
+                gameState.money += sellPrice;
+                gameState.inventory[item]--;
+                
+                let profitText = '';
+                if (profit > 0) {
+                    profitText = `<span class="profit-indicator">(获利${profit}铜钱)</span>`;
+                } else if (profit < 0) {
+                    profitText = `<span class="loss-indicator">(亏损${-profit}铜钱)</span>`;
+                }
+                
+                // 计算声望加成
+                const basePrice = gameState.prices[item];
+                const reputationBonus = sellPrice - basePrice;
+                
+                let reputationText = '';
+                if (reputationBonus > 0) {
+                    reputationText = `<span class="reputation-bonus">(声望加成: +${reputationBonus}铜钱)</span>`;
+                }
+                
+                addLog(`你在${gameState.cities[gameState.location].name}以 ${sellPrice} 铜钱的价格卖出了1单位${getItemName(item)}。${profitText} ${reputationText}`);
+                
+                // 如果卖完了，重置购买价格和购买回合
+                if (gameState.inventory[item] === 0) {
+                    gameState.purchasePrices[item] = 0;
+                    gameState.purchaseTurns[item] = 0;
+                }
+                
+                updateDisplay();
+            } else {
+                addLog(`你没有${getItemName(item)}可以出售。`);
+            }
+        }
+
+        // 买入投资
+        function buyInvestment(type) {
+            if (gameState.traveling) {
+                addLog("你正在旅途中，无法进行投资操作。");
+                return;
+            }
+            
+            const location = gameState.location;
+            const cost = gameState.investmentCosts[location][type];
+            
+            if (gameState.money >= cost) {
+                gameState.money -= cost;
+                gameState.investments[location][type]++;
+                
+                let message = '';
+                switch(type) {
+                    case 'farm':
+                        message = `你在${gameState.cities[location].name}购买了一块田地。`;
+                        break;
+                    case 'shop':
+                        message = `你在${gameState.cities[location].name}开设了一家商铺。`;
+                        break;
+                }
+                
+                addLog(message);
+                updateDisplay();
+            } else {
+                addLog(`资金不足，无法在${gameState.cities[location].name}购买${type === 'farm' ? '田地' : '商铺'}。`);
+            }
+        }
+
+        // 卖出投资
+        function sellInvestment(type) {
+            if (gameState.traveling) {
+                addLog("你正在旅途中，无法进行投资操作。");
+                return;
+            }
+            
+            const location = gameState.location;
+            const investments = gameState.investments[location];
+            
+            if (investments[type] > 0) {
+                // 卖出价格为买入价格的一半
+                const sellPrice = Math.floor(gameState.investmentCosts[location][type] / 2);
+                gameState.money += sellPrice;
+                investments[type]--;
+                
+                let message = '';
+                switch(type) {
+                    case 'farm':
+                        message = `你在${gameState.cities[location].name}卖出了一块田地，获得了${sellPrice}铜钱。`;
+                        break;
+                    case 'shop':
+                        message = `你在${gameState.cities[location].name}卖出了一家商铺，获得了${sellPrice}铜钱。`;
+                        break;
+                }
+                
+                addLog(message);
+                updateDisplay();
+            } else {
+                addLog(`你在${gameState.cities[location].name}没有${type === 'farm' ? '田地' : '商铺'}可以卖出。`);
+            }
+        }
+
+        // 投资（商队和官职）
+        function invest(type) {
+            if (gameState.traveling) {
+                addLog("你正在旅途中，无法进行投资操作。");
+                return;
+            }
+            
+            const location = gameState.location;
+            const cost = gameState.investmentCosts[location][type];
+            
+            if (gameState.money >= cost && !gameState.investments[location][type]) {
+                gameState.money -= cost;
+                gameState.investments[location][type] = true;
+                
+                switch(type) {
+                    case 'caravan':
+                        addLog(`你在${gameState.cities[location].name}入股了一个商队，可以更安全地进行长途贸易。`);
+                        break;
+                    case 'official':
+                        addLog(`你在${gameState.cities[location].name}捐了一个小官，社会地位提高了。`);
+                        gameState.reputation += 30;
+                        break;
+                }
+                
+                updateDisplay();
+            } else if (gameState.investments[location][type]) {
+                addLog(`你在${gameState.cities[location].name}已经进行过这项投资了。`);
+            } else {
+                addLog(`资金不足，无法在${gameState.cities[location].name}进行这项投资。`);
+            }
+        }
+
+        // 挥霍享受
+        function extravagance(type) {
+            if (gameState.traveling) {
+                addLog("你正在旅途中，无法进行挥霍操作。");
+                return;
+            }
+            
+            const option = gameState.extravaganceOptions[type];
+            
+            if (gameState.money >= option.cost) {
+                gameState.money -= option.cost;
+                
+                if (option.health > 0) {
+                    gameState.health = Math.min(100, gameState.health + option.health);
+                }
+                
+                if (option.reputation > 0) {
+                    gameState.reputation += option.reputation;
+                }
+                
+                addLog(option.message);
+                updateDisplay();
+            } else {
+                addLog(`资金不足，无法享受这项服务。`);
+            }
+        }
+
+        // 结婚
+        function marry(type) {
+            if (gameState.traveling) {
+                addLog("你正在旅途中，无法进行婚姻操作。");
+                return;
+            }
+            
+            if (gameState.married) {
+                addLog("你已经结过婚了，不能再结婚！");
+                return;
+            }
+            
+            const option = gameState.marriageOptions[type];
+            
+            if (gameState.reputation < option.requirement) {
+                addLog(`你的声望不足，无法与${type === 'commoner' ? '普通百姓' : type === 'scholar' ? '文人墨客' : '皇家国戚'}结婚。`);
+                return;
+            }
+            
+            gameState.married = true;
+            gameState.marriageType = type;
+            gameState.money += option.dowry;
+            gameState.reputation += option.reputationGain;
+            
+            addLog(`${option.message} 你获得了${option.dowry}铜钱的嫁妆，声望增加了${option.reputationGain}点。`);
+            updateDisplay();
+        }
+
+        // 行商
+        function travel(destination) {
+            if (gameState.traveling) {
+                addLog("你已经在路上了，无法开始新的旅程。");
+                return;
+            }
+            
+            if (destination === gameState.location) {
+                addLog("你已经在这个城市了。");
+                return;
+            }
+            
+            const travelTimes = {
+                jiangnan: 2,
+                west: 4,
+                lingnan: 3,
+                capital: 1
+            };
+            
+            gameState.traveling = true;
+            gameState.travelDestination = destination;
+            gameState.travelRemaining = travelTimes[destination];
+            
+            addLog(`你踏上了前往${gameState.cities[destination].name}的旅程，预计需要${travelTimes[destination]}个回合。`);
+            updateDisplay();
+        }
+
+        // 下一回合
+        function nextTurn() {
+            // 如果有待处理的强盗事件，不允许进入下一回合
+            if (gameState.pendingRobberEvent) {
+                return;
+            }
+            
+            gameState.turn++;
+            
+            let eventOccurred = false;
+            
+            // 处理旅行
+            if (gameState.traveling) {
+                gameState.travelRemaining--;
+                
+                if (gameState.travelRemaining <= 0) {
+                    // 到达目的地
+                    completeTravel();
+                    eventOccurred = true;
+                } else {
+                    addLog(`你在前往${gameState.cities[gameState.travelDestination].name}的路上，还有${gameState.travelRemaining}个回合到达。`);
+                    eventOccurred = true;
+                    
+                    // 行商途中可能发生事件
+                    if (Math.random() < 0.3) {
+                        const event = randomTravelEvent();
+                        
+                        // 如果是强盗事件，特殊处理
+                        if (event.type === 'robber') {
+                            handleRobberEvent();
+                        } else {
+                            addLog(event.message);
+                            
+                            if (event.moneyChange) gameState.money += event.moneyChange;
+                            if (event.healthChange) gameState.health += event.healthChange;
+                            if (event.reputationChange) gameState.reputation += event.reputationChange;
+                        }
+                        eventOccurred = true;
+                    }
+                }
+            } else {
+                // 价格波动
+                updatePrices();
+            }
+            
+            // 投资收益 - 修改为无论是否旅行都能获得收益
+            for (const city in gameState.investments) {
+                for (const type in gameState.investments[city]) {
+                    if (type === 'farm' || type === 'shop') {
+                        // 田地或商铺收益
+                        const count = gameState.investments[city][type];
+                        if (count > 0) {
+                            let income = 0;
+                            let message = '';
+                            
+                            switch(type) {
+                                case 'farm':
+                                    income = Math.floor(Math.random() * 21) + 10; // 10-30 铜钱
+                                    income *= count; // 乘以数量
+                                    message = `你在${gameState.cities[city].name}的田地带来了 ${income} 铜钱的收入。`;
+                                    break;
+                                case 'shop':
+                                    income = Math.floor(Math.random() * 31) + 20; // 20-50 铜钱
+                                    income *= count; // 乘以数量
+                                    message = `你在${gameState.cities[city].name}的商铺带来了 ${income} 铜钱的收入。`;
+                                    break;
+                            }
+                            
+                            if (income > 0) {
+                                gameState.money += income;
+                                addLog(message);
+                                eventOccurred = true;
+                            }
+                        }
+                    } else if (gameState.investments[city][type]) {
+                        // 商队或官职收益
+                        let income = 0;
+                        let message = '';
+                        
+                        switch(type) {
+                            case 'caravan':
+                                income = Math.floor(Math.random() * 41) + 30; // 30-70 铜钱
+                                message = `你在${gameState.cities[city].name}的商队带来了 ${income} 铜钱的收入。`;
+                                break;
+                        }
+                        
+                        if (income > 0) {
+                            gameState.money += income;
+                            addLog(message);
+                            eventOccurred = true;
+                        }
+                    }
+                }
+            }
+            
+            // 随机事件（仅在非旅行状态下发生）
+            if (!gameState.traveling && Math.random() < 0.4) {
+                const event = randomEvent();
+                addLog(event.message);
+                
+                if (event.moneyChange) gameState.money += event.moneyChange;
+                if (event.healthChange) gameState.health += event.healthChange;
+                if (event.reputationChange) gameState.reputation += event.reputationChange;
+                
+                eventOccurred = true;
+            }
+            
+            // 如果没有事件发生，记录"暂时无事发生"
+            if (!eventOccurred) {
+                addLog(`<span class="nothing-happened">暂时无事发生。</span>`);
+            }
+            
+            // 健康自然变化
+            if (gameState.health < 100) {
+                gameState.health += Math.floor(Math.random() * 6); // 恢复0-5点健康
+            }
+            
+            // 检查游戏结束条件
+            checkGameEnd();
+            
+            updateDisplay();
+        }
+
+        // 完成行商
+        function completeTravel() {
+            const destination = gameState.travelDestination;
+            gameState.location = destination;
+            
+            // 行商成功增加声望
+            const reputationGain = Math.floor(Math.random() * 6) + 5; // 5-10 声望
+            gameState.reputation += reputationGain;
+            
+            addLog(`你成功到达了${gameState.cities[destination].name}，声望增加了${reputationGain}点。`);
+            
+            gameState.traveling = false;
+            gameState.travelDestination = null;
+            
+            // 更新到达城市的价格
+            updatePrices();
+        }
+
+        // 随机事件
+        function randomEvent() {
+            const events = [
+                {
+                    message: `在${gameState.cities[gameState.location].name}，市场繁荣，你的商品卖出了好价钱。`,
+                    moneyChange: Math.floor(Math.random() * 51) + 30 // 30-80 铜钱
+                },
+                {
+                    message: `在${gameState.cities[gameState.location].name}遭遇小偷，损失了一些钱财。`,
+                    moneyChange: - (Math.floor(Math.random() * 41) + 20) // -20到-60 铜钱
+                },
+                {
+                    message: `你在${gameState.cities[gameState.location].name}做了一件善事，赢得了人们的赞誉。`,
+                    reputationChange: Math.floor(Math.random() * 11) + 5 // 5-15 声望
+                },
+                {
+                    message: `你在${gameState.cities[gameState.location].name}生病了，需要休养。`,
+                    healthChange: - (Math.floor(Math.random() * 16) + 10) // -10到-25 健康
+                },
+                {
+                    message: `你在${gameState.cities[gameState.location].name}帮助了一位官员，获得了他的赏识。`,
+                    reputationChange: Math.floor(Math.random() * 16) + 10 // 10-25 声望
+                },
+                {
+                    message: `在${gameState.cities[gameState.location].name}，市场不景气，你的商品滞销。`,
+                    moneyChange: - (Math.floor(Math.random() * 31) + 20) // -20到-50 铜钱
+                },
+                {
+                    message: `你在${gameState.cities[gameState.location].name}结识了一位大商人，获得了宝贵的商业建议，声望提高了。`,
+                    reputationChange: Math.floor(Math.random() * 21) + 10 // 10-30 声望
+                },
+                {
+                    message: `在${gameState.cities[gameState.location].name}，一场暴雨损坏了部分货物。`,
+                    moneyChange: - (Math.floor(Math.random() * 51) + 30) // -30到-80 铜钱
+                },
+                {
+                    message: `你在${gameState.cities[gameState.location].name}发现了一个商机，小赚了一笔。`,
+                    moneyChange: Math.floor(Math.random() * 61) + 40 // 40-100 铜钱
+                },
+                {
+                    message: `你在${gameState.cities[gameState.location].name}的山中发现了一些珍贵草药，卖给当地药店获得了一笔钱。`,
+                    moneyChange: Math.floor(Math.random() * 81) + 50 // 50-130 铜钱
+                },
+                {
+                    message: `你在${gameState.cities[gameState.location].name}救助了一位受伤的旅人，获得了感激。`,
+                    reputationChange: Math.floor(Math.random() * 16) + 10 // 10-25 声望
+                },
+                {
+                    message: `你在${gameState.cities[gameState.location].name}的市场上捡到了一个钱包，归还给失主后获得了酬谢。`,
+                    moneyChange: Math.floor(Math.random() * 41) + 20, // 20-60 铜钱
+                    reputationChange: Math.floor(Math.random() * 6) + 5 // 5-10 声望
+                },
+                {
+                    message: `你在${gameState.cities[gameState.location].name}的言行不当，引起了当地人的不满。`,
+                    reputationChange: - (Math.floor(Math.random() * 11) + 5) // -5到-15 声望
+                },
+                {
+                    message: `你在${gameState.cities[gameState.location].name}的商业行为被认为是不道德的，声望受损。`,
+                    reputationChange: - (Math.floor(Math.random() * 16) + 10) // -10到-25 声望
+                }
+            ];
+            
+            return events[Math.floor(Math.random() * events.length)];
+        }
+
+        // 随机行商事件
+        function randomTravelEvent() {
+            const events = [
+                {
+                    message: "在旅途中，你发现了一条捷径，节省了时间。",
+                    travelReduction: 1
+                },
+                {
+                    message: "你帮助了同行的商人，赢得了尊重。",
+                    reputationChange: Math.floor(Math.random() * 11) + 5 // 5-15 声望
+                },
+                {
+                    message: "旅途劳累，你的健康受到了影响。",
+                    healthChange: - (Math.floor(Math.random() * 11) + 5) // -5到-15 健康
+                },
+                {
+                    message: "你在路上发现了一些珍贵的草药，卖给路过的商人获得了一笔钱。",
+                    moneyChange: Math.floor(Math.random() * 61) + 30 // 30-90 铜钱
+                },
+                {
+                    message: "你加入了一个大型商队，旅途更加安全顺利。",
+                    reputationChange: Math.floor(Math.random() * 6) + 5 // 5-10 声望
+                },
+                {
+                    message: "恶劣天气延误了行程。",
+                    travelReduction: -1
+                },
+                {
+                    message: "你在路上救助了一位受伤的旅人，获得了感激。",
+                    reputationChange: Math.floor(Math.random() * 16) + 10 // 10-25 声望
+                },
+                {
+                    message: "你在路边发现了一些罕见的蘑菇，卖给商贩获得了一笔钱。",
+                    moneyChange: Math.floor(Math.random() * 51) + 25 // 25-75 铜钱
+                },
+                {
+                    type: "robber",
+                    message: "遭遇强盗！"
+                }
+            ];
+            
+            const event = events[Math.floor(Math.random() * events.length)];
+            
+            // 如果有旅行时间减少，应用它
+            if (event.travelReduction && gameState.travelRemaining > 1) {
+                gameState.travelRemaining += event.travelReduction;
+            }
+            
+            return event;
+        }
+
+        // 处理强盗事件
+        function handleRobberEvent() {
+            gameState.pendingRobberEvent = true;
+            
+            // 显示强盗事件模态框
+            const modal = document.getElementById('robberModal');
+            const choicesContainer = document.getElementById('robberChoices');
+            choicesContainer.innerHTML = '';
+            
+            // 添加事件日志
+            addLog(`<span class="danger-event">你在旅途中遭遇了一伙强盗！他们手持兵器挡住了去路。</span>`);
+            
+            // 根据声望决定选项
+            if (gameState.reputation > 100) {
+                // 声望大于100，有三个选项
+                const option1 = document.createElement('button');
+                option1.className = 'choice-btn';
+                option1.textContent = '以德服人（声望高，强盗放行）';
+                option1.onclick = function() {
+                    addLog("强盗头领认出了你：'原来是德高望重的大鹅先生，失敬失敬！'，他们恭敬地放你通行。");
+                    gameState.reputation += 5;
+                    closeRobberModal();
+                };
+                choicesContainer.appendChild(option1);
+            }
+            
+            // 选项2：交出一半库存保命
+            const option2 = document.createElement('button');
+            option2.className = 'choice-btn';
+            option2.textContent = '交出一半库存保命';
+            option2.onclick = function() {
+                let totalLost = 0;
+                for (const item in gameState.inventory) {
+                    if (gameState.inventory[item] > 0) {
+                        const lostCount = Math.ceil(gameState.inventory[item] / 2);
+                        totalLost += lostCount;
+                        gameState.inventory[item] -= lostCount;
+                        // 如果库存清零，重置购买价格和购买回合
+                        if (gameState.inventory[item] === 0) {
+                            gameState.purchasePrices[item] = 0;
+                            gameState.purchaseTurns[item] = 0;
+                        }
+                    }
+                }
+                
+                if (totalLost > 0) {
+                    addLog(`你交出了一半库存（共${totalLost}件商品）给强盗，保住了性命。`);
+                } else {
+                    addLog("你身上没有货物，强盗搜刮了你身上的钱财后放你走了。");
+                    gameState.money = Math.floor(gameState.money / 2);
+                }
+                
+                closeRobberModal();
+            };
+            choicesContainer.appendChild(option2);
+            
+            // 选项3：和强盗拼命
+            const option3 = document.createElement('button');
+            option3.className = 'choice-btn';
+            option3.textContent = '和强盗拼命（可能死亡）';
+            option3.onclick = function() {
+                // 有30%的几率死亡
+                if (Math.random() < 0.3) {
+                    addLog("你选择与强盗拼命，但寡不敌众，不幸遇难。");
+                    showEnding("遭遇强盗", "你在与强盗的搏斗中不幸遇难。大鹅，你的经商之路就此终结。");
+                } else {
+                    addLog("你奋力抵抗，虽然受了些伤，但成功击退了强盗。");
+                    gameState.health -= Math.floor(Math.random() * 21) + 10; // 损失10-30健康
+                    gameState.reputation += 10; // 勇敢行为增加声望
+                }
+                
+                closeRobberModal();
+            };
+            choicesContainer.appendChild(option3);
+            
+            modal.style.display = 'flex';
+            updateDisplay();
+        }
+
+        // 关闭强盗事件模态框
+        function closeRobberModal() {
+            const modal = document.getElementById('robberModal');
+            modal.style.display = 'none';
+            gameState.pendingRobberEvent = false;
+            updateDisplay();
+        }
+
+        // 检查游戏结束条件
+        function checkGameEnd() {
+            // 破产
+            if (gameState.money <= 0) {
+                showEnding("破产", "你的经商之路走到了尽头，因资金耗尽而破产。大鹅，你或许不适合经商。");
+                return;
+            }
+            
+            // 健康耗尽
+            if (gameState.health <= 10) {
+                showEnding("病逝", "长期的劳累和疾病最终夺走了你的生命。大鹅，你的经商传奇就此终结。");
+                return;
+            }
+            
+            // 声望过低
+            if (gameState.reputation <= 10) {
+                showEnding("声名狼藉", "你的行为引起了公愤，没有人愿意与你交易。大鹅，你被所有人唾弃，不得不离开这个地方。");
+                return;
+            }
+            
+            // 回合限制 - 修改为50回合
+            if (gameState.turn >= 50) {
+                if (gameState.money >= 5000) {
+                    showEnding("富甲一方", "经过多年的努力，你积累了巨额财富，成为一方巨富。大鹅，你的名字将载入商史！");
+                } else if (gameState.money >= 2000) {
+                    showEnding("成功商人", "你通过经商获得了可观的财富，过上了富裕的生活。大鹅，你的努力得到了回报。");
+                } else if (gameState.money >= 800) {
+                    showEnding("小康之家", "你的经商之路不算太成功，但也能维持一家人的生活。大鹅，平凡也是一种幸福。");
+                } else {
+                    showEnding("勉强糊口", "你的经商之路充满坎坷，最终只能勉强维持生计。大鹅，也许你该考虑其他出路。");
+                }
+                return;
+            }
+            
+            // 特殊结局 - 成为官员
+            let hasOfficial = false;
+            for (const city in gameState.investments) {
+                if (gameState.investments[city].official) {
+                    hasOfficial = true;
+                    break;
+                }
+            }
+            
+            if (hasOfficial && gameState.reputation >= 100) {
+                showEnding("官商一体", "你通过捐官和积累声望，成功进入仕途，成为官商一体的显赫人物。大鹅，你的智慧让你走上了人生巅峰！");
+                return;
+            }
+            
+            // 特殊结局 - 商业大亨
+            if (gameState.money >= 10000) {
+                showEnding("商业大亨", "你建立了庞大的商业帝国，财富无人能及。大鹅，你成为了这个时代最成功的商人！");
+                return;
+            }
+        }
+
+        // 显示结局
+        function showEnding(title, description) {
+            document.getElementById('endingTitle').textContent = title;
+            document.getElementById('endingDescription').textContent = description;
+            document.getElementById('gameOver').style.display = 'flex';
+        }
+
+        // 重新开始游戏
+        function restartGame() {
+            // 重置游戏状态
+            gameState.money = 500;
+            gameState.turn = 1;
+            gameState.reputation = 50;
+            gameState.health = 80;
+            gameState.location = 'capital';
+            
+            for (const item in gameState.inventory) {
+                gameState.inventory[item] = 0;
+                gameState.purchasePrices[item] = 0;
+                gameState.purchaseTurns[item] = 0;
+            }
+            
+            for (const city in gameState.investments) {
+                for (const type in gameState.investments[city]) {
+                    if (type === 'farm' || type === 'shop') {
+                        gameState.investments[city][type] = 0;
+                    } else {
+                        gameState.investments[city][type] = false;
+                    }
+                }
+            }
+            
+            gameState.traveling = false;
+            gameState.travelDestination = null;
+            gameState.travelRemaining = 0;
+            gameState.pendingRobberEvent = false;
+            gameState.married = false;
+            gameState.marriageType = null;
+            
+            gameState.log = [
+                { turn: "初始", message: "大鹅，你带着500铜钱在京城开始了经商之路。祝你好运！" }
+            ];
+            
+            // 更新价格
+            updatePrices();
+            
+            document.getElementById('gameOver').style.display = 'none';
+            updateDisplay();
+        }
+
+        // 添加日志
+        function addLog(message) {
+            gameState.log.push({ turn: `第${gameState.turn}回合`, message });
+        }
+
+        // 更新日志显示
+        function updateLog() {
+            const container = document.getElementById('log-container');
+            container.innerHTML = '';
+            
+            // 显示所有日志
+            gameState.log.forEach(entry => {
+                const logEntry = document.createElement('div');
+                logEntry.className = 'log-entry';
+                logEntry.innerHTML = `<span class="log-date">${entry.turn}:</span><span class="log-message">${entry.message}</span>`;
+                container.appendChild(logEntry);
+            });
+            
+            // 滚动到底部
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // 获取商品名称
+        function getItemName(item) {
+            const names = {
+                grain: "粮食",
+                cloth: "布匹",
+                tea: "茶叶",
+                porcelain: "瓷器",
+                horse: "马匹",
+                silk: "丝绸",
+                spice: "香料",
+                jade: "玉石"
+            };
+            
+            return names[item] || item;
+        }
+
+        // 初始化游戏
+        window.onload = initGame;
+    </script>
+</body>
+</html>
