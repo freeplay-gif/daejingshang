@@ -5,184 +5,183 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>大鹅经商记 - 古代多城市模拟经营游戏</title>
     <style>
+        /* 基础样式 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+            font-family: 'Microsoft YaHei', sans-serif;
         }
         
         body {
-            background-color: #f5f1e6;
-            color: #333;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><path d="M0 0 L100 0 L100 100 Z" fill="%23876"/><path d="M0 0 L0 100 L100 100 Z" fill="%23a98"/></svg>');
+            background: linear-gradient(135deg, #f5f1e6 0%, #e8dfca 100%);
+            color: #5a3921;
+            line-height: 1.6;
             padding: 20px;
+            min-height: 100vh;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            border: 1px solid #d9c7a7;
         }
         
         header {
-            background: linear-gradient(to right, #8b4513, #a0522d);
-            color: #f5deb3;
-            padding: 20px;
             text-align: center;
-            border-bottom: 3px solid #654321;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+            color: #f5f1e6;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         
         h1 {
             font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
         .subtitle {
             font-size: 1.2rem;
-            font-style: italic;
+            opacity: 0.9;
         }
         
+        /* 游戏区域布局 */
         .game-area {
-            display: flex;
-            flex-wrap: wrap;
-            padding: 20px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
             gap: 20px;
         }
         
+        /* 状态面板 */
         .status-panel {
-            flex: 1;
-            min-width: 300px;
-            background: #f9f3e9;
-            border: 2px solid #d9c7a7;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+            background: #f8f4e9;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #d9c7a7;
         }
         
-        .action-panel {
-            flex: 2;
-            min-width: 300px;
-            background: #f9f3e9;
-            border: 2px solid #d9c7a7;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+        .status-panel h2 {
+            color: #8b4513;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #d9c7a7;
         }
         
         .status-item {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
-            padding-bottom: 8px;
+            padding: 8px 0;
             border-bottom: 1px dashed #d9c7a7;
         }
         
         .status-label {
             font-weight: bold;
-            color: #8b4513;
         }
         
         .status-value {
-            font-weight: bold;
-        }
-        
-        .money {
             color: #c90;
-        }
-        
-        .location {
-            color: #5a7d9a;
-        }
-        
-        .health-low {
-            color: #e74c3c;
-        }
-        
-        .reputation-low {
-            color: #e74c3c;
-        }
-        
-        .debt-status {
-            color: #e74c3c;
             font-weight: bold;
         }
         
-        .soldiers-status {
-            color: #3498db;
-            font-weight: bold;
+        .reputation-low, .health-low {
+            color: #d9534f;
         }
         
-        .hainan-visits {
-            color: #9b59b6;
-            font-weight: bold;
-        }
-        
-        .inventory {
+        .inventory, .investments {
             margin-top: 20px;
         }
         
-        .inventory h3 {
+        .inventory h3, .investments h3 {
             color: #8b4513;
-            border-bottom: 2px solid #d9c7a7;
-            padding-bottom: 5px;
             margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #d9c7a7;
         }
         
-        .inventory-item {
+        .inventory-item, .investment-item {
             display: flex;
             justify-content: space-between;
             margin-bottom: 5px;
+            padding: 5px;
+            background: #f0e6d2;
+            border-radius: 4px;
         }
         
-        .new-item {
-            color: #e67e22;
-            font-weight: bold;
+        /* 操作面板 */
+        .action-panel {
+            background: #f8f4e9;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #d9c7a7;
         }
         
         .action-tabs {
             display: flex;
-            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 20px;
             border-bottom: 2px solid #d9c7a7;
         }
         
         .tab {
-            padding: 10px 20px;
-            cursor: pointer;
+            padding: 10px 15px;
             background: #e8dfca;
-            border: 1px solid #d9c7a7;
-            border-bottom: none;
             border-radius: 5px 5px 0 0;
-            margin-right: 5px;
+            cursor: pointer;
             transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        .tab:hover {
+            background: #d9c7a7;
         }
         
         .tab.active {
-            background: #d9c7a7;
-            font-weight: bold;
+            background: #8b4513;
+            color: #f5f1e6;
         }
         
         .tab-content {
             display: none;
-            padding: 15px;
-            background: #f9f3e9;
-            border: 1px solid #d9c7a7;
-            border-top: none;
-            border-radius: 0 0 5px 5px;
         }
         
         .tab-content.active {
             display: block;
         }
         
+        .city-info {
+            background: #f0e6d2;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #8b4513;
+        }
+        
+        .city-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #8b4513;
+            margin-bottom: 5px;
+        }
+        
+        .travel-warning, .hainan-warning {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* 市场商品 */
         .market-items {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
@@ -190,88 +189,178 @@
         .market-item {
             background: #f5f1e6;
             border: 1px solid #d9c7a7;
-            border-radius: 5px;
-            padding: 10px;
-            text-align: center;
+            border-radius: 8px;
+            padding: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
         
-        .market-item.unavailable {
-            opacity: 0.6;
-            background-color: #e8e8e8;
+        .market-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .item-name {
             font-weight: bold;
             color: #8b4513;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
         }
         
         .item-price {
             color: #c90;
             margin-bottom: 10px;
-        }
-        
-        .item-actions {
-            display: flex;
-            justify-content: space-around;
-        }
-        
-        button {
-            background: #8b4513;
-            color: #f5deb3;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s;
             font-weight: bold;
         }
         
-        button:hover {
+        .item-actions {
+            margin-top: 10px;
+        }
+        
+        /* 按钮样式 */
+        button {
+            background: #8b4513;
+            color: #f5f1e6;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            margin: 2px;
+        }
+        
+        button:hover:not(:disabled) {
             background: #a0522d;
             transform: translateY(-2px);
         }
         
         button:disabled {
-            background: #ccc;
+            background: #cccccc;
+            color: #666666;
             cursor: not-allowed;
-            transform: none;
         }
         
-        .city-info {
+        /* 数量控制 */
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            gap: 10px;
+        }
+        
+        .quantity-slider {
+            flex-grow: 1;
+            height: 8px;
+            border-radius: 4px;
+            background: #d9c7a7;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .quantity-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #8b4513;
+            cursor: pointer;
+        }
+        
+        .quantity-display {
+            min-width: 60px;
+            text-align: center;
+            font-weight: bold;
+            background: #f0e6d2;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        
+        .max-quantity {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+        
+        /* 钱庄样式 */
+        .loan-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .loan-item {
             background: #f5f1e6;
             border: 1px solid #d9c7a7;
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 15px;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
         
-        .city-name {
-            font-size: 1.5rem;
+        .loan-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .loan-name {
+            font-weight: bold;
             color: #8b4513;
             margin-bottom: 5px;
         }
         
-        .city-description {
-            font-style: italic;
+        .loan-amount {
+            color: #c90;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .loan-requirement {
             color: #666;
+            font-size: 0.9rem;
             margin-bottom: 10px;
         }
         
+        .loan-details {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f0e6d2;
+            border-radius: 8px;
+            border: 1px solid #d9c7a7;
+        }
+        
+        .loan-detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed #d9c7a7;
+        }
+        
+        /* 事件日志 */
         .event-log {
             margin-top: 20px;
-            height: 300px;
+            max-height: 200px;
             overflow-y: auto;
             border: 1px solid #d9c7a7;
-            border-radius: 5px;
-            padding: 10px;
-            background: #f5f1e6;
+            border-radius: 8px;
+            padding: 15px;
+            background: #f0e6d2;
+        }
+        
+        .event-log h3 {
+            color: #8b4513;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #d9c7a7;
         }
         
         .log-entry {
-            margin-bottom: 8px;
-            padding-bottom: 8px;
-            border-bottom: 1px dashed #d9c7a7;
+            margin-bottom: 10px;
+            padding: 8px;
+            background: #f8f4e9;
+            border-radius: 5px;
+            border-left: 3px solid #8b4513;
         }
         
         .log-date {
@@ -279,8 +368,32 @@
             color: #8b4513;
         }
         
-        .log-message {
-            margin-left: 10px;
+        .profit-indicator {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .loss-indicator {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .warning {
+            color: #856404;
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .danger-event {
+            color: #721c24;
+            background: #f8d7da;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 1px solid #f5c6cb;
         }
         
         .next-turn {
@@ -289,11 +402,16 @@
         }
         
         #nextTurnBtn {
+            background: #28a745;
             padding: 12px 30px;
             font-size: 1.1rem;
-            background: #654321;
         }
         
+        #nextTurnBtn:hover:not(:disabled) {
+            background: #218838;
+        }
+        
+        /* 游戏结束 */
         .game-over {
             display: none;
             position: fixed;
@@ -301,240 +419,55 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
             justify-content: center;
             align-items: center;
-            z-index: 100;
         }
         
         .ending-card {
-            background: #f5f1e6;
-            border: 3px solid #d9c7a7;
-            border-radius: 10px;
+            background: #f8f4e9;
             padding: 30px;
+            border-radius: 10px;
             max-width: 500px;
+            width: 90%;
             text-align: center;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
         }
         
         .ending-title {
             color: #8b4513;
-            font-size: 2rem;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
         }
         
         .ending-description {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             line-height: 1.6;
         }
         
-        .investments {
-            margin-top: 20px;
-        }
-        
-        .investments h3 {
-            color: #8b4513;
-            border-bottom: 2px solid #d9c7a7;
-            padding-bottom: 5px;
-            margin-bottom: 10px;
-        }
-        
-        .investment-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-            padding: 5px;
-            border-radius: 3px;
-        }
-        
-        .investment-item.owned {
-            background-color: #e8f5e9;
-        }
-        
-        .profit-indicator {
-            color: #4caf50;
-            font-weight: bold;
-        }
-        
-        .loss-indicator {
-            color: #f44336;
-            font-weight: bold;
-        }
-        
-        .reputation-bonus {
-            color: #3498db;
-            font-weight: bold;
-        }
-        
-        .danger-event {
-            color: #e74c3c;
-            font-weight: bold;
-        }
-        
-        .warning {
-            color: #e67e22;
-            font-weight: bold;
-        }
-        
-        .choice-container {
-            margin-top: 10px;
-            padding: 10px;
-            background: #f0e6d2;
-            border-radius: 5px;
-            border: 1px solid #d9c7a7;
-        }
-        
-        .choice-title {
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #8b4513;
-        }
-        
-        .choice-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .choice-btn {
-            background: #a0522d;
-            color: #f5deb3;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.9rem;
-        }
-        
-        .choice-btn:hover {
-            background: #8b4513;
-        }
-        
-        .extravagance-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .extravagance-item {
-            background: #f5f1e6;
-            border: 1px solid #d9c7a7;
-            border-radius: 5px;
-            padding: 10px;
-            text-align: center;
-        }
-        
-        .extravagance-name {
-            font-weight: bold;
-            color: #8b4513;
-            margin-bottom: 5px;
-        }
-        
-        .extravagance-price {
-            color: #c90;
-            margin-bottom: 10px;
-        }
-        
-        .extravagance-benefit {
-            color: #4caf50;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-        
-        .marriage-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .marriage-item {
-            background: #f5f1e6;
-            border: 1px solid #d9c7a7;
-            border-radius: 5px;
-            padding: 10px;
-            text-align: center;
-        }
-        
-        .marriage-name {
-            font-weight: bold;
-            color: #8b4513;
-            margin-bottom: 5px;
-        }
-        
-        .marriage-dowry {
-            color: #c90;
-            margin-bottom: 5px;
-        }
-        
-        .marriage-requirement {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-        
-        .marriage-benefit {
-            color: #4caf50;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-        
-        .nothing-happened {
-            color: #999;
-            font-style: italic;
-        }
-        
-        .travel-warning {
-            background-color: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 15px;
-            color: #856404;
-            font-weight: bold;
-        }
-        
-        .rebellion-option {
-            background-color: #e74c3c !important;
-            color: white !important;
-        }
-        
-        .rebellion-option:hover {
-            background-color: #c0392b !important;
-        }
-        
-        .hainan-warning {
-            background-color: #ffebee;
-            border: 1px solid #ffcdd2;
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 15px;
-            color: #c62828;
-            font-weight: bold;
-        }
-        
-        .divorce-event {
-            color: #e74c3c;
-            font-weight: bold;
-        }
-        
-        @media (max-width: 768px) {
+        /* 响应式设计 */
+        @media (max-width: 900px) {
             .game-area {
-                flex-direction: column;
+                grid-template-columns: 1fr;
             }
             
             .market-items {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
-            
-            .choice-buttons {
+        }
+        
+        @media (max-width: 600px) {
+            .action-tabs {
                 flex-direction: column;
             }
             
-            .extravagance-options, .marriage-options {
+            .market-items, .loan-options {
                 grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
             }
         }
     </style>
@@ -609,6 +542,7 @@
                     <div class="tab" data-tab="travel">行商</div>
                     <div class="tab" data-tab="extravagance">挥霍</div>
                     <div class="tab" data-tab="marriage">婚姻</div>
+                    <div class="tab" data-tab="loan">钱庄</div>
                     <div class="tab" data-tab="rebellion" id="rebellion-tab" style="display:none;">谋反</div>
                 </div>
                 
@@ -672,7 +606,7 @@
                     <h3>行商路线</h3>
                     <!-- 海南警告 -->
                     <div id="hainan-warning" class="hainan-warning" style="display:none;">
-                        警告：私盐贸易是重罪！前往海南超过3次会引起官府注意，一旦被发现将面临严厉惩罚！
+                        警告：私盐贸易是重罪！前往海南超过2次会引起官府注意，一旦被发现将面临严厉惩罚！
                     </div>
                     <div class="market-items">
                         <div class="market-item">
@@ -717,39 +651,38 @@
                 <div class="tab-content" id="extravagance-tab">
                     <h3>挥霍享受</h3>
                     <p class="warning">注意：这些行为会消耗你的金钱，但可以提升健康或声望。</p>
-                    <div class="extravagance-options">
-                        <div class="extravagance-item">
-                            <div class="extravagance-name">怡春园</div>
-                            <div class="extravagance-price">花费: 100 铜钱</div>
-                            <div class="extravagance-benefit">效果: 健康 +10</div>
+                    <div class="market-items">
+                        <div class="market-item">
+                            <div class="item-name">怡春园</div>
+                            <div class="item-price">花费: 100 铜钱</div>
                             <div class="item-actions">
                                 <button onclick="extravagance('pleasure')" id="pleasure-btn">享受服务</button>
                             </div>
+                            <div>效果: 健康 +10</div>
                         </div>
-                        <div class="extravagance-item">
-                            <div class="extravagance-name">捐香火钱</div>
-                            <div class="extravagance-price">花费: 80 铜钱</div>
-                            <div class="extravagance-benefit">效果: 声望 +15</div>
+                        <div class="market-item">
+                            <div class="item-name">捐香火钱</div>
+                            <div class="item-price">花费: 80 铜钱</div>
                             <div class="item-actions">
                                 <button onclick="extravagance('temple')" id="temple-btn">捐赠</button>
                             </div>
+                            <div>效果: 声望 +15</div>
                         </div>
-                        <div class="extravagance-item">
-                            <div class="extravagance-name">施粥济贫</div>
-                            <div class="extravagance-price">花费: 120 铜钱</div>
-                            <div class="extravagance-benefit">效果: 声望 +20</div>
+                        <div class="market-item">
+                            <div class="item-name">施粥济贫</div>
+                            <div class="item-price">花费: 120 铜钱</div>
                             <div class="item-actions">
                                 <button onclick="extravagance('charity')" id="charity-btn">施粥</button>
                             </div>
+                            <div>效果: 声望 +20</div>
                         </div>
-                        <!-- 新增招兵买马选项 -->
-                        <div class="extravagance-item">
-                            <div class="extravagance-name">招兵买马</div>
-                            <div class="extravagance-price">花费: 100 铜钱</div>
-                            <div class="extravagance-benefit">效果: 手下 +1, 声望 +1</div>
+                        <div class="market-item">
+                            <div class="item-name">招兵买马</div>
+                            <div class="item-price">花费: 100 铜钱</div>
                             <div class="item-actions">
                                 <button onclick="extravagance('recruit')" id="recruit-btn">招募</button>
                             </div>
+                            <div>效果: 手下 +1, 声望 +1</div>
                         </div>
                     </div>
                 </div>
@@ -757,38 +690,98 @@
                 <div class="tab-content" id="marriage-tab">
                     <h3>婚姻大事</h3>
                     <p class="warning">注意：婚姻是人生大事，只能选择一次！选择后无法更改。</p>
-                    <div class="marriage-options">
-                        <div class="marriage-item">
-                            <div class="marriage-name">普通百姓</div>
-                            <div class="marriage-dowry">嫁妆: 200 铜钱</div>
-                            <div class="marriage-requirement">要求: 无</div>
-                            <div class="marriage-benefit">效果: 声望 +10</div>
+                    <div class="market-items">
+                        <div class="market-item">
+                            <div class="item-name">普通百姓</div>
+                            <div class="item-price">嫁妆: 200 铜钱</div>
                             <div class="item-actions">
                                 <button onclick="marry('commoner')" id="commoner-btn">结婚</button>
                             </div>
+                            <div>效果: 声望 +10</div>
+                            <div>要求: 无</div>
                         </div>
-                        <div class="marriage-item">
-                            <div class="marriage-name">文人墨客</div>
-                            <div class="marriage-dowry">嫁妆: 500 铜钱</div>
-                            <div class="marriage-requirement">要求: 声望 ≥ 100</div>
-                            <div class="marriage-benefit">效果: 声望 +30</div>
+                        <div class="market-item">
+                            <div class="item-name">文人墨客</div>
+                            <div class="item-price">嫁妆: 500 铜钱</div>
                             <div class="item-actions">
                                 <button onclick="marry('scholar')" id="scholar-btn">结婚</button>
                             </div>
+                            <div>效果: 声望 +30</div>
+                            <div>要求: 声望 ≥ 100</div>
                         </div>
-                        <div class="marriage-item">
-                            <div class="marriage-name">皇家国戚</div>
-                            <div class="marriage-dowry">嫁妆: 1000 铜钱</div>
-                            <div class="marriage-requirement">要求: 声望 ≥ 150</div>
-                            <div class="marriage-benefit">效果: 声望 +50</div>
+                        <div class="market-item">
+                            <div class="item-name">皇家国戚</div>
+                            <div class="item-price">嫁妆: 1000 铜钱</div>
                             <div class="item-actions">
                                 <button onclick="marry('royal')" id="royal-btn">结婚</button>
+                            </div>
+                            <div>效果: 声望 +50</div>
+                            <div>要求: 声望 ≥ 150</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 钱庄选项卡 -->
+                <div class="tab-content" id="loan-tab">
+                    <h3>钱庄借贷</h3>
+                    <p class="warning">注意：借款需在5回合内还清，否则将面临严厉惩罚！利息为2%。</p>
+                    
+                    <div class="loan-details">
+                        <div class="loan-detail-item">
+                            <span>当前总债务：</span>
+                            <span id="total-debt">1500 铜钱</span>
+                        </div>
+                        <div class="loan-detail-item">
+                            <span>需还金额（含利息）：</span>
+                            <span id="debt-with-interest">1530 铜钱</span>
+                        </div>
+                        <div class="loan-detail-item">
+                            <span>到期回合：</span>
+                            <span id="debt-due-turn">15</span>
+                        </div>
+                    </div>
+                    
+                    <div class="loan-options">
+                        <div class="loan-item">
+                            <div class="loan-name">还款</div>
+                            <div class="loan-amount" id="repay-amount">金额: 100 铜钱</div>
+                            <div class="quantity-control">
+                                <input type="range" min="0" max="1500" value="100" class="quantity-slider" id="repay-slider">
+                                <span class="quantity-display" id="repay-quantity">100</span>
+                            </div>
+                            <div class="max-quantity">最大: <span id="max-repay">1500</span> 铜钱</div>
+                            <div class="item-actions">
+                                <button onclick="repayLoan()" id="repay-btn">还款</button>
+                            </div>
+                        </div>
+                        <div class="loan-item">
+                            <div class="loan-name">借款2000</div>
+                            <div class="loan-amount">金额: 2000 铜钱</div>
+                            <div class="loan-requirement">要求: 声望 ≥ 100</div>
+                            <div class="item-actions">
+                                <button onclick="borrowLoan(2000)" id="borrow-2000-btn" disabled>借款</button>
+                            </div>
+                        </div>
+                        <div class="loan-item">
+                            <div class="loan-name">借款5000</div>
+                            <div class="loan-amount">金额: 5000 铜钱</div>
+                            <div class="loan-requirement">要求: 声望 ≥ 200</div>
+                            <div class="item-actions">
+                                <button onclick="borrowLoan(5000)" id="borrow-5000-btn" disabled>借款</button>
+                            </div>
+                        </div>
+                        <div class="loan-item">
+                            <div class="loan-name">借款10000</div>
+                            <div class="loan-amount">金额: 10000 铜钱</div>
+                            <div class="loan-requirement">要求: 声望 ≥ 300</div>
+                            <div class="item-actions">
+                                <button onclick="borrowLoan(10000)" id="borrow-10000-btn" disabled>借款</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- 新增谋反选项卡 -->
+                <!-- 谋反选项卡 -->
                 <div class="tab-content" id="rebellion-tab">
                     <h3>谋反大业</h3>
                     <p class="warning danger-event">警告：谋反是极其危险的行为，一旦失败将万劫不复！</p>
@@ -851,11 +844,14 @@
             reputation: 50,
             health: 80,
             location: 'capital',
-            // 新增债务和手下数量
+            // 修改债务系统 - 还款期限改为15回合
             debt: 1500,
             debtDue: 15,
+            activeLoans: [
+                { amount: 1500, dueTurn: 15, interestRate: 0.02 }
+            ],
             soldiers: 0,
-            // 新增海南访问次数
+            // 修改海南访问次数限制为2次
             hainanVisits: 0,
             inventory: {},
             // 每个城市的价格基数和可用商品 - 新增海南和精盐
@@ -940,7 +936,9 @@
             },
             // 婚姻状态
             married: false,
-            marriageType: null
+            marriageType: null,
+            // 新增：买卖数量控制
+            tradeQuantity: {}
         };
 
         // 初始化游戏
@@ -951,6 +949,7 @@
                 gameState.inventory[item] = 0;
                 gameState.purchasePrices[item] = 0;
                 gameState.purchaseTurns[item] = 0;
+                gameState.tradeQuantity[item] = 1; // 默认交易数量为1
             });
             
             // 初始化价格
@@ -963,6 +962,18 @@
             updateInventoryList();
             updateExtravaganceButtons();
             updateMarriageButtons();
+            updateLoanButtons();
+            updateLoanDisplay();
+            
+            // 初始化还款滑块
+            const repaySlider = document.getElementById('repay-slider');
+            const repayQuantity = document.getElementById('repay-quantity');
+            const repayAmount = document.getElementById('repay-amount');
+            
+            repaySlider.addEventListener('input', function() {
+                repayQuantity.textContent = this.value;
+                repayAmount.textContent = `金额: ${this.value} 铜钱`;
+            });
         }
 
         // 更新价格（考虑波动）
@@ -1001,7 +1012,8 @@
             document.getElementById('turn').textContent = gameState.turn;
             
             // 更新债务显示
-            document.getElementById('debt').textContent = gameState.debt + ' 铜钱';
+            const totalDebt = calculateTotalDebt();
+            document.getElementById('debt').textContent = totalDebt + ' 铜钱';
             
             // 更新手下显示
             document.getElementById('soldiers').textContent = gameState.soldiers + ' 人';
@@ -1067,6 +1079,10 @@
             // 更新婚姻按钮
             updateMarriageButtons();
             
+            // 更新钱庄按钮和显示
+            updateLoanButtons();
+            updateLoanDisplay();
+            
             // 更新谋反选项卡显示
             updateRebellionTab();
             
@@ -1096,7 +1112,7 @@
             }
         }
 
-        // 更新市场商品显示
+        // 更新市场商品显示 - 添加数量控制滑块
         function updateMarketItems() {
             const container = document.getElementById('market-items-container');
             container.innerHTML = '';
@@ -1119,9 +1135,28 @@
                                 !gameState.traveling &&
                                 !(item === 'salt' && gameState.location === 'hainan'); // 在海南不能卖出精盐
                 
+                // 计算最大购买数量
+                const maxBuy = canBuy ? Math.min(Math.floor(gameState.money / gameState.prices[item]), 20) : 0;
+                const maxSell = canSell ? gameState.inventory[item] : 0;
+                
                 marketItem.innerHTML = `
                     <div class="item-name">${getItemName(item)}</div>
                     <div class="item-price">买入: ${gameState.prices[item]} 铜钱<br>卖出: ${sellPrice} 铜钱</div>
+                    
+                    <div class="quantity-control">
+                        <label>买入数量:</label>
+                        <input type="range" min="1" max="${maxBuy}" value="1" class="quantity-slider" id="buy-slider-${item}" ${!canBuy ? 'disabled' : ''}>
+                        <span class="quantity-display" id="buy-quantity-${item}">1</span>
+                    </div>
+                    <div class="max-quantity">最大: ${maxBuy} 单位</div>
+                    
+                    <div class="quantity-control">
+                        <label>卖出数量:</label>
+                        <input type="range" min="1" max="${maxSell}" value="1" class="quantity-slider" id="sell-slider-${item}" ${!canSell ? 'disabled' : ''}>
+                        <span class="quantity-display" id="sell-quantity-${item}">1</span>
+                    </div>
+                    <div class="max-quantity">最大: ${maxSell} 单位</div>
+                    
                     <div class="item-actions">
                         <button onclick="buyItem('${item}')" ${!canBuy ? 'disabled' : ''}>买入</button>
                         <button onclick="sellItem('${item}')" ${!canSell ? 'disabled' : ''}>卖出</button>
@@ -1129,6 +1164,26 @@
                 `;
                 
                 container.appendChild(marketItem);
+                
+                // 添加滑块事件监听器
+                const buySlider = document.getElementById(`buy-slider-${item}`);
+                const buyQuantity = document.getElementById(`buy-quantity-${item}`);
+                const sellSlider = document.getElementById(`sell-slider-${item}`);
+                const sellQuantity = document.getElementById(`sell-quantity-${item}`);
+                
+                if (buySlider) {
+                    buySlider.addEventListener('input', function() {
+                        buyQuantity.textContent = this.value;
+                        gameState.tradeQuantity[item] = parseInt(this.value);
+                    });
+                }
+                
+                if (sellSlider) {
+                    sellSlider.addEventListener('input', function() {
+                        sellQuantity.textContent = this.value;
+                        gameState.tradeQuantity[item] = parseInt(this.value);
+                    });
+                }
             }
         }
 
@@ -1247,6 +1302,60 @@
             }
         }
 
+        // 更新钱庄按钮状态
+        function updateLoanButtons() {
+            // 更新还款按钮
+            const repayBtn = document.getElementById('repay-btn');
+            const repaySlider = document.getElementById('repay-slider');
+            const maxRepay = document.getElementById('max-repay');
+            
+            const totalDebt = calculateTotalDebt();
+            maxRepay.textContent = Math.min(gameState.money, totalDebt);
+            repaySlider.max = Math.min(gameState.money, totalDebt);
+            
+            if (parseInt(repaySlider.value) > parseInt(repaySlider.max)) {
+                repaySlider.value = repaySlider.max;
+                document.getElementById('repay-quantity').textContent = repaySlider.max;
+                document.getElementById('repay-amount').textContent = `金额: ${repaySlider.max} 铜钱`;
+            }
+            
+            repayBtn.disabled = gameState.money <= 0 || totalDebt <= 0 || gameState.traveling;
+            
+            // 更新借款按钮
+            document.getElementById('borrow-2000-btn').disabled = gameState.reputation < 100 || gameState.traveling;
+            document.getElementById('borrow-5000-btn').disabled = gameState.reputation < 200 || gameState.traveling;
+            document.getElementById('borrow-10000-btn').disabled = gameState.reputation < 300 || gameState.traveling;
+        }
+
+        // 更新钱庄显示
+        function updateLoanDisplay() {
+            const totalDebt = calculateTotalDebt();
+            const debtWithInterest = calculateDebtWithInterest();
+            const earliestDueTurn = getEarliestDueTurn();
+            
+            document.getElementById('total-debt').textContent = totalDebt + ' 铜钱';
+            document.getElementById('debt-with-interest').textContent = debtWithInterest + ' 铜钱';
+            document.getElementById('debt-due-turn').textContent = earliestDueTurn;
+        }
+
+        // 计算总债务
+        function calculateTotalDebt() {
+            return gameState.activeLoans.reduce((total, loan) => total + loan.amount, 0);
+        }
+
+        // 计算含利息的债务
+        function calculateDebtWithInterest() {
+            return gameState.activeLoans.reduce((total, loan) => {
+                return total + Math.round(loan.amount * (1 + loan.interestRate));
+            }, 0);
+        }
+
+        // 获取最早的到期回合
+        function getEarliestDueTurn() {
+            if (gameState.activeLoans.length === 0) return '-';
+            return Math.min(...gameState.activeLoans.map(loan => loan.dueTurn));
+        }
+
         // 更新投资列表
         function updateInvestmentsList() {
             const container = document.getElementById('investments-list');
@@ -1314,7 +1423,7 @@
         // 更新海南警告
         function updateHainanWarning() {
             const hainanWarning = document.getElementById('hainan-warning');
-            if (gameState.hainanVisits >= 2) {
+            if (gameState.hainanVisits >= 1) { // 修改为1次就显示警告
                 hainanWarning.style.display = 'block';
             } else {
                 hainanWarning.style.display = 'none';
@@ -1338,7 +1447,7 @@
             document.getElementById('nextTurnBtn').addEventListener('click', nextTurn);
         }
 
-        // 买入商品
+        // 买入商品 - 修改为支持数量
         function buyItem(item) {
             if (gameState.traveling) {
                 addLog("你正在旅途中，无法进行买卖操作。");
@@ -1346,30 +1455,33 @@
             }
             
             const price = gameState.prices[item];
-            if (gameState.money >= price) {
-                gameState.money -= price;
-                gameState.inventory[item]++;
+            const quantity = gameState.tradeQuantity[item] || 1;
+            const totalCost = price * quantity;
+            
+            if (gameState.money >= totalCost) {
+                gameState.money -= totalCost;
+                gameState.inventory[item] += quantity;
                 
                 // 记录购买价格和购买回合
                 if (gameState.purchasePrices[item] === 0) {
                     gameState.purchasePrices[item] = price;
                 } else {
                     // 计算加权平均购买价格
-                    const totalCost = gameState.purchasePrices[item] * (gameState.inventory[item] - 1) + price;
+                    const totalCost = gameState.purchasePrices[item] * (gameState.inventory[item] - quantity) + totalCost;
                     gameState.purchasePrices[item] = Math.round(totalCost / gameState.inventory[item]);
                 }
                 
                 // 记录购买回合
                 gameState.purchaseTurns[item] = gameState.turn;
                 
-                addLog(`你在${gameState.cities[gameState.location].name}以 ${price} 铜钱的价格购买了1单位${getItemName(item)}。`);
+                addLog(`你在${gameState.cities[gameState.location].name}以 ${price} 铜钱/单位的价格购买了${quantity}单位${getItemName(item)}，共花费${totalCost}铜钱。`);
                 updateDisplay();
             } else {
-                addLog(`资金不足，无法在${gameState.cities[gameState.location].name}购买${getItemName(item)}。`);
+                addLog(`资金不足，无法在${gameState.cities[gameState.location].name}购买${quantity}单位${getItemName(item)}。`);
             }
         }
 
-        // 卖出商品
+        // 卖出商品 - 修改为支持数量
         function sellItem(item) {
             if (gameState.traveling) {
                 addLog("你正在旅途中，无法进行买卖操作。");
@@ -1382,7 +1494,9 @@
                 return;
             }
             
-            if (gameState.inventory[item] > 0) {
+            const quantity = gameState.tradeQuantity[item] || 1;
+            
+            if (gameState.inventory[item] >= quantity) {
                 // 检查是否本回合购买的商品
                 if (gameState.purchaseTurns[item] >= gameState.turn) {
                     addLog(`你不能卖出本回合购买的${getItemName(item)}，请等待下一回合。`);
@@ -1390,11 +1504,12 @@
                 }
                 
                 const sellPrice = getSellPrice(item);
+                const totalIncome = sellPrice * quantity;
                 const purchasePrice = gameState.purchasePrices[item];
-                const profit = sellPrice - purchasePrice;
+                const profit = (sellPrice - purchasePrice) * quantity;
                 
-                gameState.money += sellPrice;
-                gameState.inventory[item]--;
+                gameState.money += totalIncome;
+                gameState.inventory[item] -= quantity;
                 
                 let profitText = '';
                 if (profit > 0) {
@@ -1405,14 +1520,14 @@
                 
                 // 计算声望加成
                 const basePrice = gameState.prices[item];
-                const reputationBonus = sellPrice - basePrice;
+                const reputationBonus = (sellPrice - basePrice) * quantity;
                 
                 let reputationText = '';
                 if (reputationBonus > 0) {
                     reputationText = `<span class="reputation-bonus">(声望加成: +${reputationBonus}铜钱)</span>`;
                 }
                 
-                addLog(`你在${gameState.cities[gameState.location].name}以 ${sellPrice} 铜钱的价格卖出了1单位${getItemName(item)}。${profitText} ${reputationText}`);
+                addLog(`你在${gameState.cities[gameState.location].name}以 ${sellPrice} 铜钱/单位的价格卖出了${quantity}单位${getItemName(item)}，共收入${totalIncome}铜钱。${profitText} ${reputationText}`);
                 
                 // 如果卖完了，重置购买价格和购买回合
                 if (gameState.inventory[item] === 0) {
@@ -1422,7 +1537,7 @@
                 
                 updateDisplay();
             } else {
-                addLog(`你没有${getItemName(item)}可以出售。`);
+                addLog(`你没有足够的${getItemName(item)}可以出售。`);
             }
         }
 
@@ -1582,6 +1697,72 @@
             updateDisplay();
         }
 
+        // 还款功能
+        function repayLoan() {
+            if (gameState.traveling) {
+                addLog("你正在旅途中，无法进行钱庄操作。");
+                return;
+            }
+            
+            const repayAmount = parseInt(document.getElementById('repay-slider').value);
+            
+            if (repayAmount <= 0) {
+                addLog("还款金额必须大于0。");
+                return;
+            }
+            
+            if (gameState.money < repayAmount) {
+                addLog("资金不足，无法还款。");
+                return;
+            }
+            
+            const totalDebt = calculateTotalDebt();
+            if (repayAmount > totalDebt) {
+                addLog("还款金额不能超过总债务。");
+                return;
+            }
+            
+            gameState.money -= repayAmount;
+            
+            // 按比例减少每笔贷款的金额
+            const repaymentRatio = repayAmount / totalDebt;
+            gameState.activeLoans.forEach(loan => {
+                loan.amount = Math.max(0, Math.round(loan.amount - (loan.amount * repaymentRatio)));
+            });
+            
+            // 移除金额为0的贷款
+            gameState.activeLoans = gameState.activeLoans.filter(loan => loan.amount > 0);
+            
+            addLog(`你向钱庄还款${repayAmount}铜钱。`);
+            updateDisplay();
+        }
+
+        // 借款功能
+        function borrowLoan(amount) {
+            if (gameState.traveling) {
+                addLog("你正在旅途中，无法进行钱庄操作。");
+                return;
+            }
+            
+            // 检查声望要求
+            if ((amount === 2000 && gameState.reputation < 100) ||
+                (amount === 5000 && gameState.reputation < 200) ||
+                (amount === 10000 && gameState.reputation < 300)) {
+                addLog("你的声望不足，无法借款这么多。");
+                return;
+            }
+            
+            gameState.money += amount;
+            gameState.activeLoans.push({
+                amount: amount,
+                dueTurn: gameState.turn + 5, // 5回合内还清
+                interestRate: 0.02 // 2%利息
+            });
+            
+            addLog(`你向钱庄借款${amount}铜钱，需要在5回合内还清（含2%利息）。`);
+            updateDisplay();
+        }
+
         // 行商
         function travel(destination) {
             if (gameState.traveling) {
@@ -1634,6 +1815,9 @@
             
             // 新增：健康自然下降
             addLog(`<span class="warning">时光流逝，你的健康度下降了1点。</span>`);
+            
+            // 新增：检查债务到期
+            checkLoanDue();
             
             // 新增：检查离婚条件
             checkDivorce();
@@ -1750,6 +1934,24 @@
             checkGameEnd();
             
             updateDisplay();
+        }
+
+        // 检查债务到期
+        function checkLoanDue() {
+            const overdueLoans = gameState.activeLoans.filter(loan => gameState.turn > loan.dueTurn);
+            
+            if (overdueLoans.length > 0) {
+                const totalOverdue = overdueLoans.reduce((total, loan) => total + Math.round(loan.amount * (1 + loan.interestRate)), 0);
+                showEnding("债务违约", `你未能在规定期限内偿还钱庄的债务，钱庄派人查封了你的所有资产。大鹅，你的经商之路就此终结。逾期金额：${totalOverdue}铜钱。`);
+                return;
+            }
+            
+            // 提醒即将到期的贷款
+            gameState.activeLoans.forEach(loan => {
+                if (loan.dueTurn - gameState.turn <= 2) {
+                    addLog(`<span class="warning">警告：你有一笔${loan.amount}铜钱的贷款即将到期（${loan.dueTurn - gameState.turn}回合后）！</span>`);
+                }
+            });
         }
 
         // 完成行商
@@ -2014,25 +2216,30 @@
             }
             
             // 债务到期
-            if (gameState.turn > gameState.debtDue) {
-                showEnding("债务违约", "你未能在规定期限内偿还钱庄的债务，钱庄派人查封了你的所有资产。大鹅，你的经商之路就此终结。");
+            const overdueLoans = gameState.activeLoans.filter(loan => gameState.turn > loan.dueTurn);
+            if (overdueLoans.length > 0) {
+                const totalOverdue = overdueLoans.reduce((total, loan) => total + Math.round(loan.amount * (1 + loan.interestRate)), 0);
+                showEnding("债务违约", `你未能在规定期限内偿还钱庄的债务，钱庄派人查封了你的所有资产。大鹅，你的经商之路就此终结。逾期金额：${totalOverdue}铜钱。`);
                 return;
             }
             
-            // 海南访问次数超过3次
-            if (gameState.hainanVisits > 3) {
+            // 海南访问次数超过2次
+            if (gameState.hainanVisits > 2) {
                 showEnding("私盐贩子", "你多次前往海南进行私盐贸易，引起了官府的注意。官府派人将你抓捕，你的所有财产被没收，最终在狱中度过余生。");
                 return;
             }
             
-            // 回合限制 - 修改为50回合
-            if (gameState.turn >= 50) {
-                if (gameState.money >= 5000) {
-                    showEnding("富甲一方", "经过多年的努力，你积累了巨额财富，成为一方巨富。大鹅，你的名字将载入商史！");
-                } else if (gameState.money >= 2000) {
-                    showEnding("成功商人", "你通过经商获得了可观的财富，过上了富裕的生活。大鹅，你的努力得到了回报。");
-                } else if (gameState.money >= 800) {
-                    showEnding("小康之家", "你的经商之路不算太成功，但也能维持一家人的生活。大鹅，平凡也是一种幸福。");
+            // 回合限制 - 修改为40回合
+            if (gameState.turn >= 40) {
+                // 修改结局条件
+                if (gameState.money >= 66666) {
+                    showEnding("商业大亨", "经过多年的努力，你积累了巨额财富，成为一方巨富。大鹅，你的名字将载入商史！");
+                } else if (gameState.money >= 30000) {
+                    showEnding("富甲一方", "你通过经商获得了可观的财富，过上了富裕的生活。大鹅，你的努力得到了回报。");
+                } else if (gameState.money >= 20000) {
+                    showEnding("成功商人", "你的经商之路不算太成功，但也能维持一家人的生活。大鹅，平凡也是一种幸福。");
+                } else if (gameState.money >= 10000) {
+                    showEnding("小康之家", "你的经商之路充满坎坷，最终只能勉强维持生计。大鹅，也许你该考虑其他出路。");
                 } else {
                     showEnding("勉强糊口", "你的经商之路充满坎坷，最终只能勉强维持生计。大鹅，也许你该考虑其他出路。");
                 }
@@ -2054,7 +2261,7 @@
             }
             
             // 特殊结局 - 商业大亨
-            if (gameState.money >= 10000) {
+            if (gameState.money >= 66666) {
                 showEnding("商业大亨", "你建立了庞大的商业帝国，财富无人能及。大鹅，你成为了这个时代最成功的商人！");
                 return;
             }
@@ -2075,8 +2282,9 @@
             gameState.reputation = 50;
             gameState.health = 80;
             gameState.location = 'capital';
-            gameState.debt = 1500;
-            gameState.debtDue = 15;
+            gameState.activeLoans = [
+                { amount: 1500, dueTurn: 15, interestRate: 0.02 }
+            ];
             gameState.soldiers = 0;
             gameState.hainanVisits = 0;
             
@@ -2084,6 +2292,7 @@
                 gameState.inventory[item] = 0;
                 gameState.purchasePrices[item] = 0;
                 gameState.purchaseTurns[item] = 0;
+                gameState.tradeQuantity[item] = 1;
             }
             
             for (const city in gameState.investments) {
