@@ -531,6 +531,15 @@
                     <span class="status-label">海南次数：</span>
                     <span class="status-value hainan-visits" id="hainan-visits">0 次</span>
                 </div>
+                <!-- 新增库存上限显示 -->
+                <div class="status-item">
+                    <span class="status-label">库存上限：</span>
+                    <span class="status-value" id="inventory-limit">5</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">车队数量：</span>
+                    <span class="status-value" id="caravan-count">0</span>
+                </div>
                 
                 <div class="status-item" id="marriage-status" style="display:none;">
                     <span class="status-label">婚姻：</span>
@@ -579,6 +588,8 @@
                         <!-- 商品将通过JavaScript动态生成 -->
                     </div>
                     <p class="warning">注意：本回合购买的商品需要等到下一回合才能卖出。</p>
+                    <!-- 新增库存上限提示 -->
+                    <p class="warning">注意：当前库存上限为<span id="current-inventory-limit-display">5</span>个商品，可通过购买车队增加上限。</p>
                 </div>
                 
                 <div class="tab-content" id="invest-tab">
@@ -708,6 +719,16 @@
                                 <button onclick="extravagance('gamble')" id="gamble-btn">赌一把</button>
                             </div>
                             <div style="font-size:0.8rem; color:#666;">隐藏奖励：有很大概率获得1000000元</div>
+                        </div>
+                        <!-- 新增购买车队选项 -->
+                        <div class="market-item">
+                            <div class="item-name">购买车队</div>
+                            <div class="item-price">花费: 500 铜钱</div>
+                            <div class="item-actions">
+                                <button onclick="extravagance('caravan')" id="caravan-btn">购买</button>
+                            </div>
+                            <div>效果: 库存上限 +5</div>
+                            <div>当前拥有: <span id="caravan-count-display">0</span> 个车队</div>
                         </div>
                     </div>
                 </div>
@@ -878,6 +899,9 @@
             soldiers: 0,
             // 修改海南访问次数限制为2次
             hainanVisits: 0,
+            // 新增：库存上限和车队数量
+            maxInventory: 5,
+            caravanCount: 0,
             inventory: {},
             // 每个城市的价格基数和可用商品 - 新增海南和精盐
             basePrices: {
@@ -952,7 +976,9 @@
                 temple: { cost: 80, health: 0, reputation: 15, message: "你向寺庙捐赠了香火钱，善举传遍乡里，声望增加了15点。" },
                 charity: { cost: 120, health: 0, reputation: 20, message: "你为穷人施粥，获得了百姓的赞誉，声望增加了20点。" },
                 recruit: { cost: 100, soldiers: 1, reputation: 1, message: "你招募了一名手下，你的势力增强了。" },
-                gamble: { cost: 666, message: "你花费666铜钱参与赌石，" }
+                gamble: { cost: 666, message: "你花费666铜钱参与赌石，" },
+                // 新增购买车队选项
+                caravan: { cost: 500, message: "你购买了一个车队，增加了5个库存上限。" }
             },
             // 婚姻选项
             marriageOptions: {
@@ -1032,6 +1058,15 @@
             return Math.round(basePrice * reputationBonus);
         }
 
+        // 计算当前总库存
+        function getTotalInventory() {
+            let total = 0;
+            for (const item in gameState.inventory) {
+                total += gameState.inventory[item];
+            }
+            return total;
+        }
+
         // 更新显示
         function updateDisplay() {
             document.getElementById('money').textContent = gameState.money + ' 铜钱';
@@ -1046,6 +1081,14 @@
             
             // 更新海南访问次数显示
             document.getElementById('hainan-visits').textContent = gameState.hainanVisits + ' 次';
+            
+            // 更新库存上限显示
+            document.getElementById('inventory-limit').textContent = gameState.maxInventory;
+            document.getElementById('current-inventory-limit-display').textContent = gameState.maxInventory;
+            
+            // 更新车队数量显示
+            document.getElementById('caravan-count').textContent = gameState.caravanCount;
+            document.getElementById('caravan-count-display').textContent = gameState.caravanCount;
             
             // 更新声望显示，如果声望低则用红色
             const reputationElem = document.getElementById('reputation');
@@ -1162,7 +1205,13 @@
                                 !(item === 'salt' && gameState.location === 'hainan'); // 在海南不能卖出精盐
                 
                 // 计算最大购买数量
-                const maxBuy = canBuy ? Math.min(Math.floor(gameState.money / gameState.prices[item]), 20) : 0;
+                const currentTotalInventory = getTotalInventory();
+                const availableSpace = gameState.maxInventory - currentTotalInventory;
+                const maxBuy = canBuy ? Math.min(
+                    Math.floor(gameState.money / gameState.prices[item]), 
+                    20,
+                    availableSpace
+                ) : 0;
                 const maxSell = canSell ? gameState.inventory[item] : 0;
                 
                 marketItem.innerHTML = `
@@ -1297,7 +1346,19 @@
                 const btn = document.getElementById(type + '-btn');
                 const option = options[type];
                 
-                if (gameState.money < option.cost || gameState.traveling) {
+                // 特殊处理购买车队按钮
+                if (type === 'caravan') {
+                    if (gameState.caravanCount >= 5) {
+                        btn.disabled = true;
+                        btn.textContent = '已达上限';
+                    } else if (gameState.money < option.cost || gameState.traveling) {
+                        btn.disabled = true;
+                        btn.textContent = '购买';
+                    } else {
+                        btn.disabled = false;
+                        btn.textContent = '购买';
+                    }
+                } else if (gameState.money < option.cost || gameState.traveling) {
                     btn.disabled = true;
                 } else {
                     btn.disabled = false;
@@ -1474,7 +1535,7 @@
             document.getElementById('nextTurnBtn').addEventListener('click', nextTurn);
         }
 
-        // 买入商品 - 修改为支持数量
+        // 买入商品 - 修改为支持数量，并检查库存上限
         function buyItem(item) {
             if (gameState.traveling) {
                 addLog("你正在旅途中，无法进行买卖操作。");
@@ -1484,6 +1545,13 @@
             const price = gameState.prices[item];
             const quantity = gameState.tradeQuantity[item] || 1;
             const totalCost = price * quantity;
+            
+            // 检查库存上限
+            const currentTotalInventory = getTotalInventory();
+            if (currentTotalInventory + quantity > gameState.maxInventory) {
+                addLog(`购买后总库存将超过上限（${gameState.maxInventory}），无法购买。`);
+                return;
+            }
             
             if (gameState.money >= totalCost) {
                 gameState.money -= totalCost;
@@ -1693,6 +1761,15 @@
                     
                     gameState.money += winAmount;
                     addLog(message);
+                } else if (type === 'caravan') {
+                    // 购买车队特殊逻辑
+                    if (gameState.caravanCount < 5) {
+                        gameState.caravanCount++;
+                        gameState.maxInventory += 5;
+                        addLog(option.message + `当前库存上限：${gameState.maxInventory}`);
+                    } else {
+                        addLog("你已经拥有5个车队，无法再购买。");
+                    }
                 } else {
                     // 其他挥霍选项
                     if (option.health > 0) {
@@ -2362,6 +2439,9 @@
             ];
             gameState.soldiers = 0;
             gameState.hainanVisits = 0;
+            // 重置库存上限和车队数量
+            gameState.maxInventory = 5;
+            gameState.caravanCount = 0;
             
             for (const item in gameState.inventory) {
                 gameState.inventory[item] = 0;
@@ -2437,7 +2517,7 @@
             return names[item] || item;
         }
 
-        // 谋反功能
+        // 谋反功能 - 修改为点击谋反成功后弹出皇帝结局
         function startRebellion() {
             if (gameState.soldiers >= 100 && gameState.reputation >= 300) {
                 // 谋反成功
