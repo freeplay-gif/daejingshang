@@ -17,7 +17,7 @@
             background: linear-gradient(135deg, #f5f1e6 0%, #e8dfca 100%);
             color: #5a3921;
             line-height: 1.6;
-            padding: 20px;
+            padding: 10px;
             min-height: 100vh;
         }
         
@@ -28,54 +28,58 @@
         
         header {
             text-align: center;
-            margin-bottom: 25px;
-            padding: 20px;
+            margin-bottom: 15px;
+            padding: 15px;
             background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
             color: #f5f1e6;
-            border-radius: 10px;
+            border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 2rem;
+            margin-bottom: 5px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
         .subtitle {
-            font-size: 1.2rem;
+            font-size: 1rem;
             opacity: 0.9;
         }
         
         /* 游戏区域布局 */
         .game-area {
             display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 20px;
+            grid-template-columns: 280px 1fr;
+            gap: 15px;
         }
         
         /* 状态面板 */
         .status-panel {
             background: #f8f4e9;
-            border-radius: 10px;
-            padding: 20px;
+            border-radius: 8px;
+            padding: 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             border: 1px solid #d9c7a7;
+            max-height: 600px;
+            overflow-y: auto;
         }
         
         .status-panel h2 {
             color: #8b4513;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
             border-bottom: 2px solid #d9c7a7;
+            font-size: 1.2rem;
         }
         
         .status-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 8px 0;
+            margin-bottom: 8px;
+            padding: 5px 0;
             border-bottom: 1px dashed #d9c7a7;
+            font-size: 0.9rem;
         }
         
         .status-label {
@@ -92,49 +96,54 @@
         }
         
         .inventory, .investments {
-            margin-top: 20px;
+            margin-top: 15px;
         }
         
         .inventory h3, .investments h3 {
             color: #8b4513;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
+            margin-bottom: 8px;
+            padding-bottom: 3px;
             border-bottom: 1px solid #d9c7a7;
+            font-size: 1rem;
         }
         
         .inventory-item, .investment-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 5px;
-            padding: 5px;
+            margin-bottom: 3px;
+            padding: 3px;
             background: #f0e6d2;
-            border-radius: 4px;
+            border-radius: 3px;
+            font-size: 0.85rem;
         }
         
         /* 操作面板 */
         .action-panel {
             background: #f8f4e9;
-            border-radius: 10px;
-            padding: 20px;
+            border-radius: 8px;
+            padding: 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             border: 1px solid #d9c7a7;
+            max-height: 600px;
+            overflow-y: auto;
         }
         
         .action-tabs {
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
-            margin-bottom: 20px;
+            gap: 3px;
+            margin-bottom: 15px;
             border-bottom: 2px solid #d9c7a7;
         }
         
         .tab {
-            padding: 10px 15px;
+            padding: 8px 10px;
             background: #e8dfca;
             border-radius: 5px 5px 0 0;
             cursor: pointer;
             transition: all 0.3s;
             font-weight: bold;
+            font-size: 0.9rem;
         }
         
         .tab:hover {
@@ -156,64 +165,66 @@
         
         .city-info {
             background: #f0e6d2;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
             border-left: 4px solid #8b4513;
         }
         
         .city-name {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: bold;
             color: #8b4513;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
         
         .travel-warning, .hainan-warning {
             background: #f8d7da;
             color: #721c24;
-            padding: 10px 15px;
-            border-radius: 5px;
-            margin-bottom: 15px;
+            padding: 8px 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
             border: 1px solid #f5c6cb;
+            font-size: 0.9rem;
         }
         
         /* 市场商品 */
         .market-items {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
         }
         
         .market-item {
             background: #f5f1e6;
             border: 1px solid #d9c7a7;
-            border-radius: 8px;
-            padding: 15px;
+            border-radius: 6px;
+            padding: 10px;
             transition: transform 0.3s, box-shadow 0.3s;
+            font-size: 0.9rem;
         }
         
         .market-item:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .item-name {
             font-weight: bold;
             color: #8b4513;
-            margin-bottom: 8px;
-            font-size: 1.1rem;
+            margin-bottom: 5px;
+            font-size: 1rem;
         }
         
         .item-price {
             color: #c90;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             font-weight: bold;
         }
         
         .item-actions {
-            margin-top: 10px;
+            margin-top: 8px;
         }
         
         /* 按钮样式 */
@@ -221,12 +232,13 @@
             background: #8b4513;
             color: #f5f1e6;
             border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
+            padding: 6px 10px;
+            border-radius: 4px;
             cursor: pointer;
             transition: all 0.3s;
             font-weight: bold;
             margin: 2px;
+            font-size: 0.85rem;
         }
         
         button:hover:not(:disabled) {
@@ -244,14 +256,15 @@
         .quantity-control {
             display: flex;
             align-items: center;
-            margin: 10px 0;
-            gap: 10px;
+            margin: 8px 0;
+            gap: 8px;
+            font-size: 0.85rem;
         }
         
         .quantity-slider {
             flex-grow: 1;
-            height: 8px;
-            border-radius: 4px;
+            height: 6px;
+            border-radius: 3px;
             background: #d9c7a7;
             outline: none;
             -webkit-appearance: none;
@@ -259,108 +272,111 @@
         
         .quantity-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
+            width: 15px;
+            height: 15px;
             border-radius: 50%;
             background: #8b4513;
             cursor: pointer;
         }
         
         .quantity-display {
-            min-width: 60px;
+            min-width: 40px;
             text-align: center;
             font-weight: bold;
             background: #f0e6d2;
-            padding: 5px;
-            border-radius: 4px;
+            padding: 3px;
+            border-radius: 3px;
         }
         
         .max-quantity {
             color: #666;
-            font-size: 0.8rem;
-            margin-top: 5px;
+            font-size: 0.75rem;
+            margin-top: 3px;
         }
         
         /* 钱庄样式 */
         .loan-options {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
         }
         
         .loan-item {
             background: #f5f1e6;
             border: 1px solid #d9c7a7;
-            border-radius: 8px;
-            padding: 15px;
+            border-radius: 6px;
+            padding: 10px;
             text-align: center;
             transition: transform 0.3s, box-shadow 0.3s;
         }
         
         .loan-item:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .loan-name {
             font-weight: bold;
             color: #8b4513;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
         
         .loan-amount {
             color: #c90;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             font-weight: bold;
         }
         
         .loan-requirement {
             color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
         }
         
         .loan-details {
-            margin-top: 15px;
-            padding: 15px;
+            margin-top: 10px;
+            padding: 10px;
             background: #f0e6d2;
-            border-radius: 8px;
+            border-radius: 6px;
             border: 1px solid #d9c7a7;
+            font-size: 0.9rem;
         }
         
         .loan-detail-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
-            padding-bottom: 5px;
+            margin-bottom: 5px;
+            padding-bottom: 3px;
             border-bottom: 1px dashed #d9c7a7;
         }
         
         /* 事件日志 */
         .event-log {
-            margin-top: 20px;
-            max-height: 200px;
+            margin-top: 15px;
+            max-height: 150px;
             overflow-y: auto;
             border: 1px solid #d9c7a7;
-            border-radius: 8px;
-            padding: 15px;
+            border-radius: 6px;
+            padding: 10px;
             background: #f0e6d2;
         }
         
         .event-log h3 {
             color: #8b4513;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
+            margin-bottom: 8px;
+            padding-bottom: 3px;
             border-bottom: 1px solid #d9c7a7;
+            font-size: 1rem;
         }
         
         .log-entry {
-            margin-bottom: 10px;
-            padding: 8px;
+            margin-bottom: 8px;
+            padding: 5px;
             background: #f8f4e9;
-            border-radius: 5px;
+            border-radius: 4px;
             border-left: 3px solid #8b4513;
+            font-size: 0.85rem;
         }
         
         .log-date {
@@ -381,30 +397,31 @@
         .warning {
             color: #856404;
             background: #fff3cd;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
+            padding: 8px;
+            border-radius: 4px;
+            margin: 8px 0;
             border: 1px solid #ffeaa7;
+            font-size: 0.85rem;
         }
         
         .danger-event {
             color: #721c24;
             background: #f8d7da;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
+            padding: 8px;
+            border-radius: 4px;
+            margin: 8px 0;
             border: 1px solid #f5c6cb;
         }
         
         .next-turn {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 15px;
         }
         
         #nextTurnBtn {
             background: #28a745;
-            padding: 12px 30px;
-            font-size: 1.1rem;
+            padding: 10px 20px;
+            font-size: 1rem;
         }
         
         #nextTurnBtn:hover:not(:disabled) {
@@ -427,9 +444,9 @@
         
         .ending-card {
             background: #f8f4e9;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 500px;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 450px;
             width: 90%;
             text-align: center;
             box-shadow: 0 5px 25px rgba(0,0,0,0.3);
@@ -437,12 +454,12 @@
         
         .ending-title {
             color: #8b4513;
-            margin-bottom: 15px;
-            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
         }
         
         .ending-description {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             line-height: 1.6;
         }
         
@@ -453,7 +470,7 @@
             }
             
             .market-items {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             }
         }
         
@@ -467,7 +484,7 @@
             }
             
             h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
         }
     </style>
@@ -548,7 +565,7 @@
                 
                 <div class="city-info">
                     <div class="city-name" id="current-city-name">京城</div>
-                    <div class="city-description" id="current-city-description">天子脚下，商贾云集，物价偏高但市场稳定。特产：粮食、布匹、茶叶、瓷器、马匹。</div>
+                    <div class="city-description" id="current-city-description">天子脚下，商贾云集，物价偏高但市场稳定。特产：粮食、布匹、茶叶、瓷器、马匹、香料、玉石。</div>
                 </div>
                 
                 <!-- 旅行警告 -->
@@ -684,6 +701,14 @@
                             </div>
                             <div>效果: 手下 +1, 声望 +1</div>
                         </div>
+                        <div class="market-item">
+                            <div class="item-name">赌石</div>
+                            <div class="item-price">花费: 666 铜钱</div>
+                            <div class="item-actions">
+                                <button onclick="extravagance('gamble')" id="gamble-btn">赌一把</button>
+                            </div>
+                            <div style="font-size:0.8rem; color:#666;">隐藏奖励：有很大概率获得1000000元</div>
+                        </div>
                     </div>
                 </div>
                 
@@ -724,7 +749,7 @@
                 <!-- 钱庄选项卡 -->
                 <div class="tab-content" id="loan-tab">
                     <h3>钱庄借贷</h3>
-                    <p class="warning">注意：借款需在5回合内还清，否则将面临严厉惩罚！利息为2%。</p>
+                    <p class="warning">注意：借款需在5回合内还清，否则将面临严厉惩罚！利息为2%。同时只能有一笔借款。</p>
                     
                     <div class="loan-details">
                         <div class="loan-detail-item">
@@ -864,8 +889,8 @@
             },
             // 每个城市可购买的商品 - 新增海南
             availableItems: {
-                capital: ['grain', 'cloth', 'tea', 'porcelain', 'horse'],
-                jiangnan: ['grain', 'cloth', 'tea', 'silk'],
+                capital: ['grain', 'cloth', 'tea', 'porcelain', 'horse', 'spice', 'jade'],
+                jiangnan: ['grain', 'cloth', 'tea', 'silk', 'spice', 'jade'],
                 west: ['cloth', 'horse', 'spice', 'jade'],
                 lingnan: ['grain', 'tea', 'porcelain', 'spice', 'jade'],
                 hainan: ['salt'] // 海南特产精盐
@@ -902,11 +927,11 @@
             cities: {
                 capital: {
                     name: '京城',
-                    description: '天子脚下，商贾云集，物价偏高但市场稳定。特产：粮食、布匹、茶叶、瓷器、马匹。'
+                    description: '天子脚下，商贾云集，物价偏高但市场稳定。特产：粮食、布匹、茶叶、瓷器、马匹、香料、玉石。'
                 },
                 jiangnan: {
                     name: '江南',
-                    description: '鱼米之乡，盛产粮食和布匹，物价相对较低。特产：粮食、布匹、茶叶、丝绸。'
+                    description: '鱼米之乡，盛产粮食和布匹，物价相对较低。特产：粮食、布匹、茶叶、丝绸、香料、玉石。'
                 },
                 west: {
                     name: '西域',
@@ -921,12 +946,13 @@
                     description: '南海明珠，盛产精盐，但私盐贸易风险极大！特产：精盐。'
                 }
             },
-            // 挥霍选项的花费和效果 - 新增招兵买马
+            // 挥霍选项的花费和效果 - 新增招兵买马和赌石
             extravaganceOptions: {
                 pleasure: { cost: 100, health: 10, reputation: 0, message: "你在怡春园享受了优质服务，身心愉悦，健康恢复了10点。" },
                 temple: { cost: 80, health: 0, reputation: 15, message: "你向寺庙捐赠了香火钱，善举传遍乡里，声望增加了15点。" },
                 charity: { cost: 120, health: 0, reputation: 20, message: "你为穷人施粥，获得了百姓的赞誉，声望增加了20点。" },
-                recruit: { cost: 100, soldiers: 1, reputation: 1, message: "你招募了一名手下，你的势力增强了。" }
+                recruit: { cost: 100, soldiers: 1, reputation: 1, message: "你招募了一名手下，你的势力增强了。" },
+                gamble: { cost: 666, message: "你花费666铜钱参与赌石，" }
             },
             // 婚姻选项
             marriageOptions: {
@@ -1321,10 +1347,11 @@
             
             repayBtn.disabled = gameState.money <= 0 || totalDebt <= 0 || gameState.traveling;
             
-            // 更新借款按钮
-            document.getElementById('borrow-2000-btn').disabled = gameState.reputation < 100 || gameState.traveling;
-            document.getElementById('borrow-5000-btn').disabled = gameState.reputation < 200 || gameState.traveling;
-            document.getElementById('borrow-10000-btn').disabled = gameState.reputation < 300 || gameState.traveling;
+            // 更新借款按钮 - 修改为只能有一笔借款
+            const hasLoan = gameState.activeLoans.length > 0;
+            document.getElementById('borrow-2000-btn').disabled = gameState.reputation < 100 || gameState.traveling || hasLoan;
+            document.getElementById('borrow-5000-btn').disabled = gameState.reputation < 200 || gameState.traveling || hasLoan;
+            document.getElementById('borrow-10000-btn').disabled = gameState.reputation < 300 || gameState.traveling || hasLoan;
         }
 
         // 更新钱庄显示
@@ -1649,20 +1676,41 @@
             if (gameState.money >= option.cost) {
                 gameState.money -= option.cost;
                 
-                if (option.health > 0) {
-                    gameState.health = Math.min(100, gameState.health + option.health);
+                if (type === 'gamble') {
+                    // 赌石特殊逻辑
+                    let winAmount = 0;
+                    let message = option.message;
+                    
+                    // 1%几率获得大奖
+                    if (Math.random() < 0.01) {
+                        winAmount = 1000000;
+                        message += `你开出了一块极品翡翠，获得了${winAmount}铜钱的大奖！`;
+                    } else {
+                        // 普通奖励200-1000铜钱
+                        winAmount = Math.floor(Math.random() * 801) + 200;
+                        message += `你开出了一块普通玉石，获得了${winAmount}铜钱。`;
+                    }
+                    
+                    gameState.money += winAmount;
+                    addLog(message);
+                } else {
+                    // 其他挥霍选项
+                    if (option.health > 0) {
+                        gameState.health = Math.min(100, gameState.health + option.health);
+                    }
+                    
+                    if (option.reputation > 0) {
+                        gameState.reputation += option.reputation;
+                    }
+                    
+                    // 招兵买马
+                    if (option.soldiers > 0) {
+                        gameState.soldiers += option.soldiers;
+                    }
+                    
+                    addLog(option.message);
                 }
                 
-                if (option.reputation > 0) {
-                    gameState.reputation += option.reputation;
-                }
-                
-                // 新增：招兵买马
-                if (option.soldiers > 0) {
-                    gameState.soldiers += option.soldiers;
-                }
-                
-                addLog(option.message);
                 updateDisplay();
             } else {
                 addLog(`资金不足，无法享受这项服务。`);
@@ -1737,10 +1785,16 @@
             updateDisplay();
         }
 
-        // 借款功能
+        // 借款功能 - 修改为只能有一笔借款
         function borrowLoan(amount) {
             if (gameState.traveling) {
                 addLog("你正在旅途中，无法进行钱庄操作。");
+                return;
+            }
+            
+            // 检查是否已有借款
+            if (gameState.activeLoans.length > 0) {
+                addLog("你已经有未还清的借款，请先还清后再借。");
                 return;
             }
             
@@ -1908,7 +1962,7 @@
                 }
             }
             
-            // 随机事件（仅在非旅行状态下发生）
+            // 随机事件（仅在非旅行状态下发生）- 增加更多负面事件
             if (!gameState.traveling && Math.random() < 0.4) {
                 const event = randomEvent();
                 addLog(event.message);
@@ -1992,7 +2046,7 @@
             }
         }
 
-        // 随机事件
+        // 随机事件 - 增加更多负面事件
         function randomEvent() {
             const events = [
                 {
@@ -2051,6 +2105,27 @@
                 {
                     message: `你在${gameState.cities[gameState.location].name}的商业行为被认为是不道德的，声望受损。`,
                     reputationChange: - (Math.floor(Math.random() * 16) + 10) // -10到-25 声望
+                },
+                {
+                    message: `你在${gameState.cities[gameState.location].name}感染了风寒，健康状况恶化。`,
+                    healthChange: - (Math.floor(Math.random() * 21) + 10) // -10到-30 健康
+                },
+                {
+                    message: `在${gameState.cities[gameState.location].name}，一场大火烧毁了你的部分货物。`,
+                    moneyChange: - (Math.floor(Math.random() * 101) + 50) // -50到-150 铜钱
+                },
+                {
+                    message: `你在${gameState.cities[gameState.location].name}的仓库被盗，损失了一半货物。`,
+                    moneyChange: - (Math.floor(gameState.money / 2)) // 损失一半资金
+                },
+                {
+                    message: `在${gameState.cities[gameState.location].name}，一场瘟疫导致市场萧条，你的生意受到影响。`,
+                    moneyChange: - (Math.floor(Math.random() * 81) + 40), // -40到-120 铜钱
+                    healthChange: - (Math.floor(Math.random() * 11) + 5) // -5到-15 健康
+                },
+                {
+                    message: `你在${gameState.cities[gameState.location].name}的竞争对手散布谣言，损害了你的声誉。`,
+                    reputationChange: - (Math.floor(Math.random() * 21) + 10) // -10到-30 声望
                 }
             ];
             
